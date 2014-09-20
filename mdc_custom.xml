@@ -1,0 +1,259 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+    <!-- View -->
+    <record id="mdc_custmap_tree" model="ir.ui.view">
+        <field name="name">mdc.custmap.tree</field>
+        <field name="model">mdc.custmap</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Customer Mapping">
+            <field name='srce_model'/>
+            <field name='srce_cust_name'/>
+            <field name='dest_cust_name'/>
+         </tree>
+     </field>
+    </record>   
+
+    <record id="mdc_custmap_form" model="ir.ui.view">
+        <field name="name">mdc.custmap.form</field>
+        <field name="model">mdc.custmap</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Customer Mapping">
+            <field name='srce_model'/>
+            <field name='srce_cust_name'/>
+            <field name='dest_cust_name'/>
+         </form>
+     </field>
+    </record>   
+
+    <record id="mdc_prodmap_tree" model="ir.ui.view">
+        <field name="name">mdc.prodmap.tree</field>
+        <field name="model">mdc.prodmap</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Product Mapping">
+            <field name='srce_model'/>
+            <field name='srce_prod_name'/>
+            <field name='dest_prod_name'/>
+         </tree>
+     </field>
+    </record>   
+
+    <record id="mdc_prodmap_form" model="ir.ui.view">
+        <field name="name">mdc.prodmap.form</field>
+        <field name="model">mdc.prodmap</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Product Mapping">
+            <field name='srce_model'/>
+            <field name='srce_prod_name'/>
+            <field name='dest_prod_name'/>
+         </form>
+     </field>
+    </record>   
+
+    <record id="mdc_raworder1_form" model="ir.ui.view">
+        <field name="name">mdc.raworder1.form</field>
+        <field name="model">mdc.raworder1</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Raw Order - Format 1">
+            <field name='deptcode'/>
+            <field name='podate'/>
+            <field name='deliverydate'/>
+            <field name='paymentterm'/>
+            <field name='pono'/>
+            <field name='eanshiptolocno'/>
+            <field name='textbox13'/>
+            <field name='textbox14'/>
+            <field name='textbox16'/>
+            <field name='eancorplocno'/>
+            <field name='textbox35'/>
+            <field name='textbox79'/>
+            <field name='vendorcode'/>
+            <field name='textbox82'/>
+            <field name='textbox85'/>
+            <field name='lineitemno_1'/>
+            <field name='eanproductcode'/>
+            <field name='productdesc'/>
+            <field name='invendorproductcode'/>
+            <field name='textbox8'/>
+            <field name='fullpallet'/>
+            <field name='ordermultiple'/>
+            <field name='orderedqty'/>
+            <field name='totorder'/>
+            <field name='unitprice'/>
+            <field name='grosscaseprice'/>
+            <field name='pctdisc1'/>
+            <field name='lineitemamt'/>
+            <field name='textbox24'/>
+            <field name='textbox48'/>
+            <field name='textbox86'/>
+            <field name='amtdisc1'/>
+            <field name='pctdisc1_2'/>
+            <field name='netamt'/>
+            <field name='textbox17'/>
+            <field name='textbox22'/>
+            <field name='list4'/>
+            <field name='validate_date'/>
+            <field name='cust_map_ok'/>
+            <field name='prod_map_ok'/>
+            <field name='validate_remark'/>
+         </form>
+     </field>
+ </record>   
+
+    <record id="mdc_raworder1_tree" model="ir.ui.view">
+        <field name="name">mdc.raworder1.tree</field>
+        <field name="model">mdc.raworder1</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Raw Order - Format 1">
+                <field name='validate_date'/>
+                <field name='podate'/>
+                <field name='deliverydate'/>
+                <field name='pono'/>
+                <field name='textbox13'/>
+                <field name='lineitemno_1'/>
+                <field name='eanproductcode'/>
+                <field name='productdesc'/>
+            </tree>
+         </field>
+     </record>
+
+	<!-- Action -->
+	<record model="ir.actions.act_window" id="action_mdc_custom">
+		<field name="name">MDC Custom Action</field>
+		<field name="res_model">mdc.raworder1</field>
+        <field name="view_id" ref="mdc_raworder1_tree"/>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="context">{}</field>
+	</record>
+
+	<record model="ir.actions.act_window" id="action_mdc_custmap">
+		<field name="name">MDC Customer Mapping Action</field>
+		<field name="res_model">mdc.custmap</field>
+        <field name="view_id" ref="mdc_custmap_tree"/>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="context">{}</field>
+	</record>
+
+	<record model="ir.actions.act_window" id="action_mdc_prodmap">
+		<field name="name">MDC Product Mapping Action</field>
+		<field name="res_model">mdc.prodmap</field>
+        <field name="view_id" ref="mdc_prodmap_tree"/>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="context">{}</field>
+	</record>
+
+    <record model="ir.actions.server" id="action_mdc_raworder1_validate">
+            <field name="sequence" eval="5"/>
+            <field name="state">code</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" search="[('model','=','mdc.raworder1')]"/>
+            <field name="code">self.validate(cr, uid, context.get('active_id'), context)</field>
+            <field name="condition">True</field>
+            <field name="name">Validate</field>
+    </record>
+
+    <!-- Action Bindings -->
+    <record model="ir.values" id="ir_mdc_raworder1_validate">
+        <field name="key">action</field>
+        <field name="key2">client_action_multi</field>
+        <field name="model">mdc.raworder1</field>
+        <field name="name">Validate Raw Order</field>
+        <field name="value" eval="'ir.actions.server,' + str(ref('action_mdc_raworder1_validate'))" />
+    </record>
+
+	<!-- Menu -->
+        <menuitem
+                id="mdc_menu_0"
+                name="ModernCare"
+                action="action_mdc_custom"
+                sequence="1"
+        />
+        <menuitem
+                id="mdc_menu_10"
+                name="Raw Orders"
+                action="action_mdc_custom"
+                sequence="10"
+                parent="mdc_menu_0"
+        />
+        <menuitem
+                id="mdc_menu_11"
+                name="Big C"
+                action="action_mdc_custom"
+                sequence="11"
+                parent="mdc_menu_10"
+        />
+        <menuitem
+                id="mdc_menu_12"
+                name="Robinson"
+                action="action_mdc_custom"
+                sequence="12"
+                parent="mdc_menu_10"
+        />
+        <menuitem
+                id="mdc_menu_13"
+                name="Tesco"
+                action="action_mdc_custom"
+                sequence="13"
+                parent="mdc_menu_10"
+        />
+        <menuitem
+                id="mdc_menu_20"
+                name="Export to LP"
+                action="action_mdc_custom"
+                sequence="20"
+                parent="mdc_menu_0"
+        />
+        <menuitem
+                id="mdc_menu_21"
+                name="Big C to LP"
+                action="action_mdc_custom"
+                sequence="21"
+                parent="mdc_menu_20"
+        />
+        <menuitem
+                id="mdc_menu_30"
+                name="Reports"
+                action="action_mdc_custom"
+                sequence="30"
+                parent="mdc_menu_0"
+        />
+        <menuitem
+                id="mdc_menu_31"
+                name="Packing Summary"
+                action="action_mdc_custom"
+                sequence="31"
+                parent="mdc_menu_30"
+        />
+        <menuitem
+                id="mdc_menu_40"
+                name="Configurations"
+                action="action_mdc_custom"
+                sequence="40"
+                parent="mdc_menu_0"
+        />
+        <menuitem
+                id="mdc_menu_41"
+                name="Customer Mapping"
+                action="action_mdc_custmap"
+                sequence="41"
+                parent="mdc_menu_40"
+        />
+        <menuitem
+                id="mdc_menu_42"
+                name="Product Mapping"
+                action="action_mdc_prodmap"
+                sequence="42"
+                parent="mdc_menu_40"
+        />
+
+	</data>
+</openerp>
