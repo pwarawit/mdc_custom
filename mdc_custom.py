@@ -61,5 +61,37 @@ class mdc_raworder1(osv.osv):
     }
 mdc_raworder1
 
+class mdc_custmap(osv.osv):
+    _name = 'mdc.custmap'
+    _description = 'MDC Customer Mapping'
+    _columns = {
+    'srce_model' : fields.char('Source Model', size=32, required=True),
+    'srce_cust_field' : fields.char('Source Customer Field', size=32, required=True),
+    'srce_cust_value' : fields.char('Source Customer Value', size=256, required=True),
+    'dest_cust_value' : fields.char('Destination Customer Value', size=256, required=True),
+    }
+mdc_custmap
+
+class mdc_prodmap(osv.osv):
+    _name = 'mdc.prodmap'
+    _description = 'MDC Product Mapping'
+    _columns = {
+    'srce_model' : fields.char('Source Model', size=32, required=True),
+    'srce_prod_field' : fields.char('Source Product Field', size=32, required=True),
+    'srce_prod_value' : fields.char('Source Product Value', size=256, required=True),
+    'dest_prod_value' : fields.char('Destination Product Value', size=256, required=True),
+    }
+mdc_prodmap
+
+class mdc_processlog(osv.osv):
+    _name = 'mdc.processlog'
+    _description = 'MDC Process Log'
+    _columns = {
+    'srce_model' : fields.char('Source Model', size=32, required=False),
+    'process_name' : fields.char('Process Name', size=32, required=False),
+    'process_date' : fields.date('Process Date', required=False),
+    'log' : fields.text('Log Messages', required=False),
+    }
+mdc_processlog
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4
