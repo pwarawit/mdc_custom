@@ -191,7 +191,7 @@
 		</record>
 
 		<!-- Menu Definitions -->
-		<menuitem id="mdc_menu_0" name="ModernCare" action="action_mdc_custmap"
+		<menuitem id="mdc_menu_0" name="ModernCare" action="action_mdc_raworder1"
 			sequence="1" />
 		<menuitem id="mdc_menu_10" name="Raw Order" action="action_mdc_raworder1"
 			sequence="10" parent="mdc_menu_0" />
@@ -214,8 +214,12 @@
 			<field name="state">code</field>
 			<field name="type">ir.actions.server</field>
 			<field name="model_id" search="[('model','=','mdc.raworder1')]" />
-			<field name="code">self.validate(cr, uid, context.get('active_ids'),
-				context)</field>
+			<!-- <field name="code">self.validate(cr, uid, context.get('active_ids'), 
+				context) </field> -->
+			<field name="code">
+				action = self.validate(cr, uid, context.get('active_ids'), context)
+			</field>
+
 			<field name="condition">True</field>
 			<field name="name">Validate</field>
 		</record>

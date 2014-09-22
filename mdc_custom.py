@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from osv import osv, fields
 import time
+import validate
 
 class mdc_raworder1(osv.osv):
     _name = 'mdc.raworder1'
@@ -59,6 +60,10 @@ class mdc_raworder1(osv.osv):
     'textbox22' : fields.char('textbox22', size=256, required=False),
     'list4' : fields.char('list4', size=256, required=False),
     }
+    
+    def validate(self, cr, uid, ids, context):
+        validate.validate(self,"mdc.raworder1", cr, uid, context)
+        
 mdc_raworder1
 
 class mdc_custmap(osv.osv):

@@ -1,3 +1,37 @@
+# -*- coding: utf-8 -*-
+from osv import osv, fields
+import time
+
+def validate(self,srce, cr, uid, context):
+    '''
+        Validate Functions
+        srce = Source Model - mdc.raworder1 | mdc.raworder2 | mdc.raworder3
+    '''
+    # Define dictionary for fieldnames
+    cust_field = {"mdc.raworder1":"eanshiptolocno", 
+                  "mdc.raworder2":"custname2", 
+                  "mdc.raworder3":"custname3"}
+    partner_search_field = {"mdc.raworder1":"ref",
+                         "mdc.raworder2":"name",
+                         "mdc.raworder3":"ref"}
+    prod_field = {"mdc.raworder1":"", "mdc.raworder2":"custname2", "mdc.raworder3":"custname3"}
+    
+    # Loop through each records on srce
+    for rec_id in self.search(cr, uid, []):
+        # read customer value from raworder 
+        cust_value =  self.read(cr, uid, rec_id,[cust_field[self._name]])[cust_field[self._name]]
+        partner = self.pool.get('res.partner')
+        print cust_value
+        print partner_search_field[self._name]
+        #search_str = "'" + partner_search_field[self._name] + "',"
+        #print partner.search(cr, uid, [partner_search_field[self._name],'=',cust_value])
+        '''
+    print self
+    print self.read(cr, uid, self.search(cr, uid,[]), ['podate'])
+    raworder = self.pool.get(srce)
+'''
+    
+'''
     def validate(self, cr, uid, ids, context):
 
         def custmap_check(rawcustname):
@@ -49,3 +83,4 @@
             self.write(cr, uid, obj_id, {"validate_date":timestamp, "validate_remark":resulttext}, context=context)
 
         return 
+'''        
