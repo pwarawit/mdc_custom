@@ -62,7 +62,7 @@ class mdc_raworder1(osv.osv):
     }
     
     def validate(self, cr, uid, ids, context):
-        validate.validate(self,"mdc.raworder1", cr, uid, context)
+        validate.validate(self, cr, uid, context)
         
 mdc_raworder1
 
