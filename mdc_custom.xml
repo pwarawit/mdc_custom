@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <openerp>
 	<data>
-    <!-- View -->
+<!--
     <record id="mdc_custmap_tree" model="ir.ui.view">
         <field name="name">mdc.custmap.tree</field>
         <field name="model">mdc.custmap</field>
@@ -123,7 +123,6 @@
          </field>
      </record>
 
-	<!-- Action -->
 	<record model="ir.actions.act_window" id="action_mdc_custom">
 		<field name="name">MDC Custom Action</field>
 		<field name="res_model">mdc.raworder1</field>
@@ -161,7 +160,6 @@
             <field name="name">Validate</field>
     </record>
 
-    <!-- Action Bindings -->
     <record model="ir.values" id="ir_mdc_raworder1_validate">
         <field name="key">action</field>
         <field name="key2">client_action_multi</field>
@@ -170,7 +168,6 @@
         <field name="value" eval="'ir.actions.server,' + str(ref('action_mdc_raworder1_validate'))" />
     </record>
 
-	<!-- Menu -->
         <menuitem
                 id="mdc_menu_0"
                 name="ModernCare"
@@ -254,6 +251,8 @@
                 sequence="42"
                 parent="mdc_menu_40"
         />
+    
+-->
 
 	</data>
 </openerp>

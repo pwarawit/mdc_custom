@@ -1,0 +1,51 @@
+    def validate(self, cr, uid, ids, context):
+
+        def custmap_check(rawcustname):
+            custmap = self.pool.get('mdc.custmap')
+            custmap_search_criteria = [("srce_cust_name","like",rawcustname),("srce_model","=","mdc.raworder1")]
+            #custmap_search_criteria = [("srce_model","=","mdc.raworder1")]
+            custmap_id_list = custmap.search(cr, uid, custmap_search_criteria, context = context)
+            return custmap_id_list
+
+        # Read all the needed customer info into cust_list
+        cust = self.pool.get('res.partner')
+        cust_search_criteria = [("customer","=",True)]
+        cust_id_list = cust.search(cr, uid, cust_search_criteria, context=context)
+        cust_field_list = ['name']
+        cust_list = cust.read(cr, uid, cust_id_list, cust_field_list, context)
+        # Create list of names
+        cust_name_list = []
+        for i in cust_list:
+            cust_name_list.append(i['name'])
+
+        # Loop for each selected records
+        for obj_id in context.get('active_ids'):
+            
+            timestamp = time.strftime("%d %b %Y %H:%M:%S")
+
+            # Get current raw order record into rec object
+            rec = self.browse(cr, uid, obj_id)
+
+            resulttext = timestamp + "\n    Validating textbox13: " + rec.textbox13 + "\n"
+
+            # Check if the rec.textbox13 exists in cust_list, return dict if found.
+            if cust_name_list.count(rec.textbox13) == 1:
+                self.write(cr, uid, obj_id, {"cust_map_ok":True}, context=context)
+                resulttext = resulttext + "\n Customer Name FOUND!!! \n\n"
+            else:
+                resulttext = resulttext + "\n No matched with existing customer name -- checking with Customer Mapping Tables..."
+                # Call function to check custmap 
+                resulttext = resulttext + str(custmap_check(rec.textbox13))
+                self.write(cr, uid, obj_id, {"cust_map_ok":False}, context=context)
+                resulttext = resulttext + "\n Customer Name NOT FOUND!!! \n\n"
+
+            # Compose validation result
+            for i in cust_list:
+                if i['name'] == rec.textbox13:
+                    resulttext = resulttext + "\n" + i['name'] + " ----- " + str(i['name'] == rec.textbox13)
+
+            resulttext = resulttext + "\n number of times matches: " + str(cust_name_list.count(rec.textbox13))
+
+            self.write(cr, uid, obj_id, {"validate_date":timestamp, "validate_remark":resulttext}, context=context)
+
+        return 
