@@ -42,6 +42,9 @@ def validate(self, cr, uid, context):
         # Check with all_cust if matched
         custmap_ok = False
         for cust_rec in all_cust:
+            if custmap_ok:
+                # If the customer has been found in earlier loop, then break
+                break
             if cust_rec[partner_search_field[self._name]] == cust_value:
                 print "cust_value: " + cust_value + "  Matched!!! with " + \
                     cust_rec[partner_search_field[self._name]]
@@ -49,9 +52,6 @@ def validate(self, cr, uid, context):
                 break
             else:
                 # Check against all_custmap
-                print "Entering cust map"
-                print len(all_custmap)
-                print all_custmap
                 for custmap_rec in all_custmap:
                     if (custmap_rec['srce_cust_field'] == partner_search_field[self._name]) and (custmap_rec['srce_cust_value'] == cust_value):
                         custmap_ok = True
