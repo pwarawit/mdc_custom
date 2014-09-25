@@ -217,11 +217,24 @@
 			<!-- <field name="code">self.validate(cr, uid, context.get('active_ids'), 
 				context) </field> -->
 			<field name="code">
-				action = self.validate(cr, uid, context.get('active_ids'), context)
+				action = self.validate(cr, uid,
+				context.get('active_ids'), context)
 			</field>
 
 			<field name="condition">True</field>
 			<field name="name">Validate</field>
+		</record>
+		<record model="ir.actions.server" id="action_mdc_raworder1_convert">
+			<field name="sequence" eval="5" />
+			<field name="state">code</field>
+			<field name="type">ir.actions.server</field>
+			<field name="model_id" search="[('model','=','mdc.raworder1')]" />
+			<field name="code">
+				action = self.convert(cr, uid,
+				context.get('active_ids'), context)
+			</field>
+			<field name="condition">True</field>
+			<field name="name">Convert</field>
 		</record>
 
 		<!-- Server Action Binding -->
@@ -233,7 +246,17 @@
 			<field name="value"
 				eval="'ir.actions.server,' + str(ref('action_mdc_raworder1_validate'))" />
 		</record>
+		<record model="ir.values" id="ir_mdc_raworder1_convert">
+			<field name="key">action</field>
+			<field name="key2">client_action_multi</field>
+			<field name="model">mdc.raworder1</field>
+			<field name="name">Convert Raw Order</field>
+			<field name="value"
+				eval="'ir.actions.server,' + str(ref('action_mdc_raworder1_convert'))" />
+		</record>
+
 	</data>
+
 </openerp>
 
 

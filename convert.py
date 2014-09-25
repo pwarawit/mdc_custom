@@ -2,20 +2,103 @@
 from osv import osv, fields
 import time
 from datetime import datetime
-from docutils.nodes import table
 
 def convert(self, cr, uid, context):
     '''
         Convert Functions - convert from raw order to Sale Order
         self = Self Model - mdc.raworder1 | mdc.raworder2 | mdc.raworder3
     '''
-      
-    timestamp = time.strftime("%d %b %Y %H:%M:%S")
+    partner_search_field = {"mdc.raworder1":"name",
+                         "mdc.raworder2":"name",
+                         "mdc.raworder3":"ref"}
     
-    print timestamp
+    prod_field = {"mdc.raworder1":"eanproductcode",
+                  "mdc.raworder2":"custname2",
+                  "mdc.raworder3":"custname3"}
+    
+    # Hardcoded default values
+    pricelist_id = 1
+    
+    timestamp = time.strftime("%d %b %Y %H:%M:%S")
+    log_msg = "\n" + timestamp + " Construct list of POs\n"
+    
+    # Construct the set of POs (use set instead of list to prevent duplication)
+    po_list = set()
+    for rec_id in self.search(cr, uid, []):
+        # create object for current record
+        rec_obj = self.browse(cr, uid, rec_id, context)
+        if rec_obj.mdcvld_ok:
+            # adding order reference into po_list 
+            if rec_obj.mdcso_order_ref not in po_list:
+                po_list.add(rec_obj.mdcso_order_ref)
+            
+    # Loop through each of the POs
+    for po_rec in po_list:
+        log_msg = log_msg + "\nCreating PO number : " + po_rec
+        domain_criteria = [('mdcso_order_ref','=',po_rec)]
+        # Read data and construct poline_list which get all records as list of each po line
+        poline_list = self.read(cr, uid, self.search(cr, uid, domain_criteria),
+                          ['id', 'mdcso_customer', 'mdcso_cust_delivery', 'mdcso_cust_invoice',
+                           'mdcso_orderdate', 'mdcso_deliverydate','mdcso_order_ref',
+                           'mdcso_prod_linenum','mdcso_prod_name', 'mdcso_prod_qty','mdcso_prod_price'])
+        
+        # Search customer for mdcso_customer name
+        partner = self.pool.get('res.partner')
+        partner_id = partner.search(cr, uid, [('name','=',poline_list[0]["mdcso_customer"])])
+        print partner_id
+
+        # Construct so_value, dictionary that contains Sales Order value
+        so_value = {"partner_id" : partner_id[0],
+                    "partner_invoice_id" : partner_id[0],
+                    "partner_shipping_id" : partner_id[0],
+                    "pricelist_id" : 1,
+                    "state" : "progress",
+                    "origin" : poline_list[0]["mdcso_order_ref"]}
+        
+        print "\n\n"
+        print so_value
+        #print poline_list[:]['mdcso_customer']
+        print poline_list 
+        
+        log_msg = log_msg + "\n  PO: " + po_rec + " contains " + str(len(poline_list)) + " lines.\n"
+        
+        # Create Sale Order
+        so = self.pool.get('sale.order')
+        #so_rec = so.create(cr, uid, so_value, context)
+        
+        # Create Sale Order Line
+        soline_value = {"order_id" : 22,
+                        "name" : "testing order line",
+                        "sequence" : 1,
+                        "product_id" : 1,
+                        "price_unit" : 0.5,
+                        "product_uom_qty" : 5
+                        }
+        soline = self.pool.get('sale.order.line')
+        soline_rec = soline.create(cr, uid, soline_value, context)
+        
+        #log_msg = log_msg + "\n  Sale Order ID: " + str(so_rec) + " created.\n\n"
+        log_msg = log_msg + "\n  Sale Order ID: " + str(soline_rec) + " created.\n\n"
+        
+    print log_msg
+        #print dicts
+    
+    #print po_list
+    
+#     partner = self.pool.get('res.partner')
+#     raworder = self.search()
+#     partner_object = partner.read(cr, uid, partner.search(cr, uid, [(partner_search_field[self._name], '=', self.mdcso_customer)]), ['id', 'name', 'ref'])
+#     partner_id = partner_object['id']
+#     print partner_id
     
     # Loop through each of the POs (Order Ref)
-    
+#     so = self.pool.get('sale.order')
+#     so_value = {"partner_id" : 6,
+#                 "partner_invoice_id" : 6,
+#                 "partner_shipping_id" : 6,
+#                 "pricelist_id" : 1}
+#     so_rec = so.create(cr, uid, so_value, context)
+#     print so_rec
 
 #     # Read all data from res.partner and mdc_custmap
 #     partner = self.pool.get('res.partner')
