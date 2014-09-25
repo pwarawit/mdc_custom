@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from osv import osv, fields
 import time
+from datetime import datetime
 
 def validate(self, cr, uid, context):
     '''
@@ -8,19 +9,42 @@ def validate(self, cr, uid, context):
         self = Self Model - mdc.raworder1 | mdc.raworder2 | mdc.raworder3
     '''
     # Define dictionary for fieldnames
-    cust_field = {"mdc.raworder1":"textbox13", 
-                  "mdc.raworder2":"custname2", 
+    cust_field = {"mdc.raworder1":"textbox13",
+                  "mdc.raworder2":"custname2",
                   "mdc.raworder3":"custname3"}
     partner_search_field = {"mdc.raworder1":"name",
                          "mdc.raworder2":"name",
                          "mdc.raworder3":"ref"}
-    prod_field = {"mdc.raworder1":"eanproductcode", 
-                  "mdc.raworder2":"custname2", 
+    prod_field = {"mdc.raworder1":"eanproductcode",
+                  "mdc.raworder2":"custname2",
                   "mdc.raworder3":"custname3"}
     product_search_field = {"mdc.raworder1":"ean13",
                              "mdc.raworder2":"ean13",
                              "mdc.raworder3":"ean13"
                              }
+    orderdate_field = {"mdc.raworder1":"podate",
+                       "mdc.raworder2":"podate",
+                       "mdc.raworder3":"podate"}
+    
+    deliverydate_field = {"mdc.raworder1":"deliverydate",
+                       "mdc.raworder2":"deliverydate",
+                       "mdc.raworder3":"deliverydate"}
+
+    orderref_field = {"mdc.raworder1":"pono",
+                       "mdc.raworder2":"pono",
+                       "mdc.raworder3":"pono"}
+
+    linenum_field = {"mdc.raworder1":"lineitemno_1",
+                       "mdc.raworder2":"lineitemno_1",
+                       "mdc.raworder3":"lineitemno_1"}
+                
+    prodqty_field = {"mdc.raworder1":"totorder",
+                       "mdc.raworder2":"totorder",
+                       "mdc.raworder3":"totorder"}
+                
+    prodprice_field = {"mdc.raworder1":"unitprice",
+                       "mdc.raworder2":"unitprice",
+                       "mdc.raworder3":"unitprice"}
     
     timestamp = time.strftime("%d %b %Y %H:%M:%S")
 
@@ -29,12 +53,12 @@ def validate(self, cr, uid, context):
     custmap = self.pool.get('mdc.custmap')
     products = self.pool.get('product.product')
     prodmap = self.pool.get('mdc.prodmap')
-    all_cust = partner.read(cr, uid, partner.search(cr, uid, [('customer','=',True)]),['id','name','ref'])
-    all_prod = products.read(cr, uid, products.search(cr, uid, [('active','=',True)]),['id','code','ean13','name.template'])
-    all_custmap = custmap.read(cr, uid, custmap.search(cr, uid, [('srce_model','=',self._name)]), 
-                               ['srce_cust_field','srce_cust_value','dest_cust_value'])
-    all_prodmap = prodmap.read(cr, uid, prodmap.search(cr, uid, [('srce_model','=',self._name)]),
-                               ['srce_prod_field','srce_prod_value','dest_prod_value'])
+    all_cust = partner.read(cr, uid, partner.search(cr, uid, [('customer', '=', True)]), ['id', 'name', 'ref'])
+    all_prod = products.read(cr, uid, products.search(cr, uid, [('active', '=', True)]), ['id', 'code', 'ean13', 'name.template'])
+    all_custmap = custmap.read(cr, uid, custmap.search(cr, uid, [('srce_model', '=', self._name)]),
+                               ['srce_cust_field', 'srce_cust_value', 'dest_cust_value'])
+    all_prodmap = prodmap.read(cr, uid, prodmap.search(cr, uid, [('srce_model', '=', self._name)]),
+                               ['srce_prod_field', 'srce_prod_value', 'dest_prod_value'])
             
     # Loop through each records on self
     for rec_id in self.search(cr, uid, []):
@@ -47,7 +71,7 @@ def validate(self, cr, uid, context):
         vldn_msg = timestamp + " Start Validating Customer..."
         
         # read customer & product value from raworder 
-        cust_value =  self.read(cr, uid, rec_id, [cust_field[self._name]])[cust_field[self._name]]
+        cust_value = self.read(cr, uid, rec_id, [cust_field[self._name]])[cust_field[self._name]]
         prod_value = self.read(cr, uid, rec_id, [prod_field[self._name]])[prod_field[self._name]]
         
         
@@ -58,7 +82,7 @@ def validate(self, cr, uid, context):
                 # If the customer has been found in earlier loop, then break
                 break
             if cust_rec[partner_search_field[self._name]] == cust_value:
-                vldn_msg = vldn_msg +  "\nRaw Customer Value: " + cust_value + "  matched with " + \
+                vldn_msg = vldn_msg + "\nRaw Customer Value: " + cust_value + "  matched with " + \
                     cust_rec[partner_search_field[self._name]]
                 mdcso_cust = cust_rec[partner_search_field[self._name]]
                 custmap_ok = True
@@ -68,7 +92,7 @@ def validate(self, cr, uid, context):
                 for custmap_rec in all_custmap:
                     if (custmap_rec['srce_cust_field'] == partner_search_field[self._name]) and \
                         (custmap_rec['srce_cust_value'] == cust_value):
-                        vldn_msg = vldn_msg +  "\nRaw Customer Value: " + cust_value + "  matched with " + \
+                        vldn_msg = vldn_msg + "\nRaw Customer Value: " + cust_value + "  matched with " + \
                             custmap_rec['dest_cust_value'] + " via Customer Mappping Table."
                         mdcso_cust = custmap_rec['dest_cust_value']
                         custmap_ok = True
@@ -111,7 +135,32 @@ def validate(self, cr, uid, context):
         
         if custmap_ok and prodmap_ok:
             mdcvld_ok = True
-            vldn_msg = vldn_msg + "\n\n Both customer and product valided successfully"
+            # Read other fields data
+            cur_rec = self.read(cr, uid, rec_id, [
+                                        orderdate_field[self._name],
+                                        deliverydate_field[self._name],
+                                        orderref_field[self._name],
+                                        linenum_field[self._name],
+                                        prodqty_field[self._name],
+                                        prodprice_field[self._name]
+                                        ])
+
+            # assume orderdate and delivery date format as for Big C
+            mdcso_orderdate = time.mktime(time.strptime(cur_rec[orderdate_field[self._name]][0:10],"%d/%m/%Y"))
+            mdcso_deliverydate = time.mktime(time.strptime(cur_rec[deliverydate_field[self._name]][0:10],"%d/%m/%Y"))
+            mdcso_orderdate = datetime.fromtimestamp(mdcso_orderdate)
+            mdcso_deliverydate = datetime.fromtimestamp(mdcso_deliverydate)
+
+            self.write(cr, uid, rec_id, {
+                                     "mdcso_orderdate" : mdcso_orderdate,
+                                     "mdcso_deliverydate" : mdcso_deliverydate,
+                                     "mdcso_order_ref" : cur_rec[orderref_field[self._name]],
+                                     "mdcso_prod_linenum" : cur_rec[linenum_field[self._name]],
+                                     "mdcso_prod_qty" : int(float(cur_rec[prodqty_field[self._name]])),
+                                     "mdcso_prod_price" : float(cur_rec[prodprice_field[self._name]])
+                                     } , context)
+            #print curr_rec.orderref_field[self._name]
+            vldn_msg = vldn_msg + "\n\n Both customer and product valided successfully. Other fields populated"
         else:
             mdcvld_ok = False
             
@@ -121,7 +170,9 @@ def validate(self, cr, uid, context):
                                      "mdcvld_prodmap_ok" : prodmap_ok,
                                      "mdcvld_ok" : mdcvld_ok,
                                      "mdcso_customer" : mdcso_cust,
+                                     "mdcso_cust_delivery" : mdcso_cust,
+                                     "mdcso_cust_invoice" : mdcso_cust,
                                      "mdcso_prod_name" : mdcso_prod,
-                                     "mdcvld_remark" : vldn_msg                                     
-                                     } ,context)
+                                     "mdcvld_remark" : vldn_msg,                                  
+                                     } , context)
         
