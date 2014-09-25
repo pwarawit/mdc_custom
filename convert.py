@@ -12,7 +12,7 @@ def convert(self, cr, uid, context):
                          "mdc.raworder2":"name",
                          "mdc.raworder3":"ref"}
     
-    prod_field = {"mdc.raworder1":"eanproductcode",
+    prod_field = {"mdc.raworder1":"ean13",
                   "mdc.raworder2":"custname2",
                   "mdc.raworder3":"custname3"}
     
@@ -45,7 +45,6 @@ def convert(self, cr, uid, context):
         # Search customer for mdcso_customer name
         partner = self.pool.get('res.partner')
         partner_id = partner.search(cr, uid, [('name','=',poline_list[0]["mdcso_customer"])])
-        print partner_id
 
         # Construct so_value, dictionary that contains Sales Order value
         so_value = {"partner_id" : partner_id[0],
@@ -64,18 +63,25 @@ def convert(self, cr, uid, context):
         
         # Create Sale Order
         so = self.pool.get('sale.order')
-        #so_rec = so.create(cr, uid, so_value, context)
+        so_rec = so.create(cr, uid, so_value, context)
         
-        # Create Sale Order Line
-        soline_value = {"order_id" : 22,
-                        "name" : "testing order line",
-                        "sequence" : 1,
-                        "product_id" : 1,
-                        "price_unit" : 0.5,
-                        "product_uom_qty" : 5
+        # Loop through each of the Order Lines
+        for poline in poline_list:
+            # Search product id from product table
+            prod = self.pool.get('product.product')
+            prod_id = prod.search(cr, uid, [(prod_field[self._name],'=',poline_list[0]["mdcso_prod_name"])])
+            prod_name = prod.read(cr, uid, prod_id[0], ['name']) 
+            
+            # Construct Sale Order Line 
+            soline_value = {"order_id" : so_rec,
+                            "name" : prod_name,
+                            "sequence" : poline['mdcso_prod_linenum'],
+                            "product_id" : prod_id[0],
+                        "price_unit" : poline['mdcso_prod_price'],
+                        "product_uom_qty" : poline['mdcso_prod_qty']
                         }
-        soline = self.pool.get('sale.order.line')
-        soline_rec = soline.create(cr, uid, soline_value, context)
+            soline = self.pool.get('sale.order.line')
+            soline_rec = soline.create(cr, uid, soline_value, context)
         
         #log_msg = log_msg + "\n  Sale Order ID: " + str(so_rec) + " created.\n\n"
         log_msg = log_msg + "\n  Sale Order ID: " + str(soline_rec) + " created.\n\n"
