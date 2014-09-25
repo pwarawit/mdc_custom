@@ -48,6 +48,8 @@ def validate(self, cr, uid, context):
                        "mdc.raworder3":"unitprice"}
     
     timestamp = time.strftime("%d %b %Y %H:%M:%S")
+    log_msg = timestamp + "\nValidate data in raw order table(" + str(self._name) + ") started...\n"
+    log_msg = log_msg + "\There are " + str(self.search(cr, uid, [])) + " records in " + str(self._name) + " table."
 
     # Read all data from res.partner and mdc_custmap
     partner = self.pool.get('res.partner')
@@ -74,8 +76,7 @@ def validate(self, cr, uid, context):
         # read customer & product value from raworder 
         cust_value = self.read(cr, uid, rec_id, [cust_field[self._name]])[cust_field[self._name]]
         prod_value = self.read(cr, uid, rec_id, [prod_field[self._name]])[prod_field[self._name]]
-        
-        
+               
         # Check with all_cust if matched
         custmap_ok = False
         for cust_rec in all_cust:
@@ -176,6 +177,39 @@ def validate(self, cr, uid, context):
                                      "mdcso_prod_name" : mdcso_prod,
                                      "mdcvld_remark" : vldn_msg,                                  
                                      } , context)
+        
+    # Compose log message - summarizing validation results
+    all_valid_count = self.search(cr, uid, [('mdcvld_ok','=',True)], offset=0, count=True)
+    invalid_cust_count = self.search(cr, uid, [('mdcvld_custmap_ok','=',False)], offset=0, count=True)
+    invalid_prod_count = self.search(cr, uid, [('mdcvld_prodmap_ok','=',False)], offset=0, count=True)
+    log_msg = log_msg + "\nValidation Completed."
+    log_msg = log_msg + "\nThere are " + str(all_valid_count) + " records that all valid"
+    log_msg = log_msg + "\nThere are " + str(invalid_cust_count) + " records with invalid customer"
+    log_msg = log_msg + "\nThere are " + str(invalid_prod_count) + " records with invalid product"
+    
+    # Construct list of invalid customers
+    invalid_cust_list = set()
+    for rec in self.search(cr, uid, [('mdcvld_custmap_ok','=',False)]):
+        cust_value = self.read(cr, uid, rec, [cust_field[self._name]])[cust_field[self._name]]
+        if cust_value not in invalid_cust_list:
+            invalid_cust_list.add(cust_value)
 
-# ToDO
-# Keep all the Write overall log into mdc_processlog table        
+    # Construct list of invalid products
+    invalid_prod_list = set()
+    for rec in self.search(cr, uid, [('mdcvld_prodmap_ok','=',False)]):
+        prod_value = self.read(cr, uid, rec, [prod_field[self._name]])[prod_field[self._name]]
+        if prod_value not in invalid_prod_list:        
+            invalid_prod_list.add(prod_value)
+
+    log_msg = log_msg + "\nThere are " + str(len(invalid_cust_list)) + " unique invlide customers:\n" + str(invalid_cust_list)
+    log_msg = log_msg + "\nThere are " + str(len(invalid_prod_list)) + " unique invlide products:\n" + str(invalid_prod_list)
+    
+    
+    # Write process log
+    processlog = self.pool.get('mdc.processlog')
+    processlog_value = {"srce_model" : str(self._name),
+                        "process_name" : "Validate",
+                        "process_date" : datetime.now(),
+                        "log" : log_msg}
+    processlog_rec = processlog.create(cr, uid, processlog_value,context)
+ 
