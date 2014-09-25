@@ -2,6 +2,7 @@
 from osv import osv, fields
 import time
 from datetime import datetime
+from docutils.nodes import table
 
 def validate(self, cr, uid, context):
     '''
@@ -175,4 +176,6 @@ def validate(self, cr, uid, context):
                                      "mdcso_prod_name" : mdcso_prod,
                                      "mdcvld_remark" : vldn_msg,                                  
                                      } , context)
-        
+
+# ToDO
+# Keep all the Write overall log into mdc_processlog table        

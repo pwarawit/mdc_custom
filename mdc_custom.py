@@ -2,6 +2,7 @@
 from osv import osv, fields
 import time
 import validate
+import convert
 
 class mdc_raworder1(osv.osv):
     _name = 'mdc.raworder1'
@@ -63,6 +64,10 @@ class mdc_raworder1(osv.osv):
     
     def validate(self, cr, uid, ids, context):
         validate.validate(self, cr, uid, context)
+        
+    def convert(self, cr, uid, ids, context):
+        convert.convert(self, cr, uid, context)
+        
         
 mdc_raworder1
 
