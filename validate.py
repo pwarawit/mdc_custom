@@ -10,10 +10,10 @@ def validate(self, cr, uid, context):
         self = Self Model - mdc.raworder1 | mdc.raworder2 | mdc.raworder3
     '''
     # Define dictionary for fieldnames
-    cust_field = {"mdc.raworder1":"textbox13",
+    cust_field = {"mdc.raworder1":"eanshiptolocno",
                   "mdc.raworder2":"custname2",
                   "mdc.raworder3":"custname3"}
-    partner_search_field = {"mdc.raworder1":"name",
+    partner_search_field = {"mdc.raworder1":"ref",
                          "mdc.raworder2":"name",
                          "mdc.raworder3":"ref"}
     prod_field = {"mdc.raworder1":"eanproductcode",
@@ -49,7 +49,7 @@ def validate(self, cr, uid, context):
     
     timestamp = time.strftime("%d %b %Y %H:%M:%S")
     log_msg = timestamp + "\nValidate data in raw order table(" + str(self._name) + ") started...\n"
-    log_msg = log_msg + "\There are " + str(self.search(cr, uid, [])) + " records in " + str(self._name) + " table."
+    log_msg = log_msg + "There are " + str(len(self.search(cr, uid, []))) + " records in " + str(self._name) + " table."
 
     # Read all data from res.partner and mdc_custmap
     partner = self.pool.get('res.partner')
@@ -85,8 +85,8 @@ def validate(self, cr, uid, context):
                 break
             if cust_rec[partner_search_field[self._name]] == cust_value:
                 vldn_msg = vldn_msg + "\nRaw Customer Value: " + cust_value + "  matched with " + \
-                    cust_rec[partner_search_field[self._name]]
-                mdcso_cust = cust_rec[partner_search_field[self._name]]
+                    cust_rec['name']
+                mdcso_cust = cust_rec['name']
                 custmap_ok = True
                 break
             else:
@@ -201,8 +201,12 @@ def validate(self, cr, uid, context):
         if prod_value not in invalid_prod_list:        
             invalid_prod_list.add(prod_value)
 
-    log_msg = log_msg + "\nThere are " + str(len(invalid_cust_list)) + " unique invlide customers:\n" + str(invalid_cust_list)
-    log_msg = log_msg + "\nThere are " + str(len(invalid_prod_list)) + " unique invlide products:\n" + str(invalid_prod_list)
+    log_msg = log_msg + "\n\nThere are " + str(len(invalid_cust_list)) + " unique invalid customers:"
+    for x in invalid_cust_list:
+        log_msg = log_msg + "\n" + x
+    log_msg = log_msg + "\n\nThere are " + str(len(invalid_prod_list)) + " unique invalid products:"
+    for x in invalid_prod_list:
+        log_msg = log_msg + "\n" + x
     
     
     # Write process log
