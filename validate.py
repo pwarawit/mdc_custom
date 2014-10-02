@@ -158,8 +158,8 @@ def validate(self, cr, uid, context):
                                      "mdcso_deliverydate" : mdcso_deliverydate,
                                      "mdcso_order_ref" : cur_rec[orderref_field[self._name]],
                                      "mdcso_prod_linenum" : cur_rec[linenum_field[self._name]],
-                                     "mdcso_prod_qty" : int(float(cur_rec[prodqty_field[self._name]])),
-                                     "mdcso_prod_price" : float(cur_rec[prodprice_field[self._name]])
+                                     "mdcso_prod_qty" : int(float(cur_rec[prodqty_field[self._name]].replace(',', ''))),
+                                     "mdcso_prod_price" : float(cur_rec[prodprice_field[self._name]].replace(',', ''))
                                      } , context)
             #print curr_rec.orderref_field[self._name]
             vldn_msg = vldn_msg + "\n\n Both customer and product valided successfully. Other fields populated"
