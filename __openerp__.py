@@ -28,7 +28,7 @@
     This module contains all the customization for ModernCare company. 
     """,
     'author': 'InfoMobius Co.,Ltd',
-    'depends': ['sale'],
+    'depends': ['sale', 'stock'],
     'data': ['mdc_custom.xml',
              'security/mdc_custom_security.xml',
              'security/ir.model.access.csv'],
