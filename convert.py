@@ -6,18 +6,19 @@ from datetime import datetime
 def convert(self, cr, uid, context):
     '''
         Convert Functions - convert from raw order to Sale Order
-        self = Self Model - mdc.raworder1 | mdc.raworder2 | mdc.raworder3
+        self = Self Model - mdc.order.bigc | mdc.order.lotus| mdc.order.robinson
     '''
-    partner_search_field = {"mdc.raworder1":"name",
-                         "mdc.raworder2":"name",
-                         "mdc.raworder3":"ref"}
+    partner_search_field = {"mdc.order.bigc":"name",
+                         "mdc.order.lotus":"name",
+                         "mdc.order.robinson":"ref"}
     
-    prod_field = {"mdc.raworder1":"ean13",
-                  "mdc.raworder2":"ean13",
-                  "mdc.raworder3":"ean13"}
+    prod_field = {"mdc.order.bigc":"ean13",
+                  "mdc.order.lotus":"ean13",
+                  "mdc.order.robinson":"ean13"}
     
     # Hardcoded default values
     pricelist_id = 1
+    tax_id = [2] #Output VAT
     
     timestamp = time.strftime("%d %b %Y %H:%M:%S")
     log_msg = timestamp + "\nConvert from raw order(" + str(self._name) + ") to Sales Order started...\n"
@@ -27,7 +28,7 @@ def convert(self, cr, uid, context):
     for rec_id in self.search(cr, uid, []):
         # create object for current record
         rec_obj = self.browse(cr, uid, rec_id, context)
-        if rec_obj.mdcvld_ok:
+        if rec_obj.mdcvld_ok and not rec_obj.mdcso_ok:
             # adding order reference into po_list 
             if rec_obj.mdcso_order_ref not in po_list:
                 po_list.add(rec_obj.mdcso_order_ref)
@@ -36,7 +37,7 @@ def convert(self, cr, uid, context):
                 
     # Loop through each of the POs
     for po_rec in po_list:
-        log_msg = log_msg + "\nCreating PO number : " + po_rec
+        # log_msg = log_msg + "\nCreating PO number : " + po_rec
         domain_criteria = [('mdcso_order_ref','=',po_rec)]
         # Read data and construct poline_list which get all records as list of each po line
         poline_list = self.read(cr, uid, self.search(cr, uid, domain_criteria),
@@ -57,7 +58,7 @@ def convert(self, cr, uid, context):
                     "state" : "draft",
                     "origin" : poline_list[0]["mdcso_order_ref"]}
         
-        log_msg = log_msg + "\n" + str(so_value) + "\n"        
+        # log_msg = log_msg + "\n" + str(so_value) + "\n"        
         log_msg = log_msg + "\n  PO: " + po_rec + " contains " + str(len(poline_list)) + " lines."
         
         # Create Sale Order
@@ -68,20 +69,24 @@ def convert(self, cr, uid, context):
         for poline in poline_list:
             # Search product id from product table
             prod = self.pool.get('product.product')
-            prod_id = prod.search(cr, uid, [(prod_field[self._name],'=',poline_list[0]["mdcso_prod_name"])])
+            prod_id = prod.search(cr, uid, [(prod_field[self._name],'=',poline["mdcso_prod_name"])])
             prod_name = prod.read(cr, uid, prod_id[0], ['name']) 
-            
-            # Construct Sale Order Line 
+
+            # Construct Sale Order Line, hard coded Tax to '2' - Output vat, and add 7% into price_unit 
             soline_value = {"order_id" : so_rec,
                             "name" : prod_name['name'],
                             "sequence" : poline['mdcso_prod_linenum'],
                             "product_id" : prod_id[0],
-                        "price_unit" : poline['mdcso_prod_price'],
-                        "product_uom_qty" : poline['mdcso_prod_qty']
-                        }
+                            "price_unit" : poline['mdcso_prod_price'] * 1.07,
+                            "tax_id" : [(6, 0, tax_id)],
+                            "product_uom_qty" : poline['mdcso_prod_qty']
+                            }
             soline = self.pool.get('sale.order.line')
             soline_rec = soline.create(cr, uid, soline_value, context)
-            log_msg = log_msg + "\n" + str(soline_value)
+            # log_msg = log_msg + "\n" + str(soline_value)
+            
+            # Write back to the raw order table mdcso_date, mdcso_ok
+            self.write(cr, uid, poline['id'], {"mdcso_date" : timestamp,"mdcso_ok" : True} , context)
         
     # Write process log
     processlog = self.pool.get('mdc.processlog')
