@@ -7,43 +7,49 @@ from docutils.nodes import table
 def validate(self, cr, uid, context):
     '''
         Validate Functions
-        self = Self Model - mdc.raworder1 | mdc.raworder2 | mdc.raworder3
+        self = Self Model - mdc.order.bigc | mdc.raworder2 | mdc.raworder3
     '''
     # Define dictionary for fieldnames
-    cust_field = {"mdc.raworder1":"eanshiptolocno",
+    cust_field = {"mdc.order.bigc":"eanshiptolocno",
                   "mdc.raworder2":"custname2",
                   "mdc.raworder3":"custname3"}
-    partner_search_field = {"mdc.raworder1":"ref",
+    partner_search_field = {"mdc.order.bigc":"ref",
                          "mdc.raworder2":"name",
                          "mdc.raworder3":"ref"}
-    prod_field = {"mdc.raworder1":"eanproductcode",
+
+    prod_field = {"mdc.order.bigc":"eanproductcode",
                   "mdc.raworder2":"custname2",
                   "mdc.raworder3":"custname3"}
-    product_search_field = {"mdc.raworder1":"ean13",
+    
+    pono_field = {"mdc.order.bigc":"pono",
+                  "mdc.raworder2":"pono",
+                  "mdc.raworder3":"pono"
+                  }
+    product_search_field = {"mdc.order.bigc":"ean13",
                              "mdc.raworder2":"ean13",
                              "mdc.raworder3":"ean13"
                              }
-    orderdate_field = {"mdc.raworder1":"podate",
+    orderdate_field = {"mdc.order.bigc":"podate",
                        "mdc.raworder2":"podate",
                        "mdc.raworder3":"podate"}
     
-    deliverydate_field = {"mdc.raworder1":"deliverydate",
+    deliverydate_field = {"mdc.order.bigc":"deliverydate",
                        "mdc.raworder2":"deliverydate",
                        "mdc.raworder3":"deliverydate"}
 
-    orderref_field = {"mdc.raworder1":"pono",
+    orderref_field = {"mdc.order.bigc":"pono",
                        "mdc.raworder2":"pono",
                        "mdc.raworder3":"pono"}
 
-    linenum_field = {"mdc.raworder1":"lineitemno_1",
+    linenum_field = {"mdc.order.bigc":"lineitemno_1",
                        "mdc.raworder2":"lineitemno_1",
                        "mdc.raworder3":"lineitemno_1"}
                 
-    prodqty_field = {"mdc.raworder1":"totorder",
+    prodqty_field = {"mdc.order.bigc":"totorder",
                        "mdc.raworder2":"totorder",
                        "mdc.raworder3":"totorder"}
                 
-    prodprice_field = {"mdc.raworder1":"unitprice",
+    prodprice_field = {"mdc.order.bigc":"unitprice",
                        "mdc.raworder2":"unitprice",
                        "mdc.raworder3":"unitprice"}
     
@@ -182,17 +188,47 @@ def validate(self, cr, uid, context):
     all_valid_count = self.search(cr, uid, [('mdcvld_ok','=',True)], offset=0, count=True)
     invalid_cust_count = self.search(cr, uid, [('mdcvld_custmap_ok','=',False)], offset=0, count=True)
     invalid_prod_count = self.search(cr, uid, [('mdcvld_prodmap_ok','=',False)], offset=0, count=True)
-    log_msg = log_msg + "\nValidation Completed."
+    log_msg = log_msg + "\n\nValidation Completed."
     log_msg = log_msg + "\nThere are " + str(all_valid_count) + " records that all valid"
     log_msg = log_msg + "\nThere are " + str(invalid_cust_count) + " records with invalid customer"
     log_msg = log_msg + "\nThere are " + str(invalid_prod_count) + " records with invalid product"
     
-    # Construct list of invalid customers
-    invalid_cust_list = set()
-    for rec in self.search(cr, uid, [('mdcvld_custmap_ok','=',False)]):
-        cust_value = self.read(cr, uid, rec, [cust_field[self._name]])[cust_field[self._name]]
-        if cust_value not in invalid_cust_list:
-            invalid_cust_list.add(cust_value)
+    # Analyze the POs in the raw order
+    po_list = set()
+    for rec in self.search(cr, uid, []):
+        po_value = self.read(cr, uid, rec, [pono_field[self._name]])[pono_field[self._name]]
+        if po_value not in po_list:
+            po_list.add(po_value)
+    
+    log_msg = log_msg + "\n\nThere are " + str(len(po_list)) + " orders: "
+    for x in sorted(po_list):
+        log_msg = log_msg + "\n Order Number : " + x
+        poline_count = self.search(cr, uid, [(pono_field[self._name], '=', str(x))], offset=0, count=True)
+        log_msg = log_msg + "  contains " + str(poline_count) + " lines."
+        
+        # Check if within PO - are all lines valid?
+        invalid_line_count = self.search(cr, uid, [('mdcvld_ok','=',False),
+                                                   (pono_field[self._name], '=', str(x))], offset=0, count=True)
+        if invalid_line_count == 0:
+            log_msg = log_msg + "  All order lines are valid."
+        else:
+            # There is at least 1 invalid line
+            invalid_cust_list = set()
+            invalid_prod_list = set()
+            for invalid_rec in self.search(cr, uid, [('mdcvld_ok','=',False)
+                                                     , (pono_field[self._name], '=', str(x))]):
+                if not self.browse(cr, uid, invalid_rec).mdcvld_custmap_ok:
+                    invalid_cust_list.add(self.read(cr, uid, invalid_rec, 
+                                                    [cust_field[self._name]])[cust_field[self._name]])
+                if not self.browse(cr, uid, invalid_rec).mdcvld_prodmap_ok:
+                    invalid_prod_list.add(self.read(cr, uid, invalid_rec, 
+                                                    [prod_field[self._name]])[prod_field[self._name]])
+            if len(invalid_cust_list) != 0:
+                log_msg = log_msg + "\n    Invalid customer : " + str(invalid_cust_list.pop())
+            if len(invalid_prod_list) != 0:
+                log_msg = log_msg + "\n    Invalid product(s) : "
+                for x in invalid_prod_list:
+                    log_msg = log_msg + ", " + str(x)
 
     # Construct list of invalid products
     invalid_prod_list = set()
@@ -201,13 +237,9 @@ def validate(self, cr, uid, context):
         if prod_value not in invalid_prod_list:        
             invalid_prod_list.add(prod_value)
 
-    log_msg = log_msg + "\n\nThere are " + str(len(invalid_cust_list)) + " unique invalid customers:"
-    for x in invalid_cust_list:
-        log_msg = log_msg + "\n" + x
     log_msg = log_msg + "\n\nThere are " + str(len(invalid_prod_list)) + " unique invalid products:"
     for x in invalid_prod_list:
-        log_msg = log_msg + "\n" + x
-    
+        log_msg = log_msg + "\n" + x    
     
     # Write process log
     processlog = self.pool.get('mdc.processlog')

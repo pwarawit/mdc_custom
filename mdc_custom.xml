@@ -70,11 +70,12 @@
 			<field name="model">mdc.order.bigc</field>
 			<field name="arch" type="xml">
 				<tree string="MDC Order Big C">
-					<field name='mdcvld_date' />
 					<field name='mdcvld_ok' />
-					<field name='podate' />
-					<field name='deliverydate' />
+					<field name='mdcvld_custmap_ok' />
+					<field name='mdcvld_prodmap_ok' />
+					<field name='mdcso_ok' />
 					<field name='pono' />
+					<field name='deliverydate' />
 					<field name='eanshiptolocno' />
 					<field name='textbox13' />
 					<field name='lineitemno_1' />
@@ -289,7 +290,7 @@
 		<record model="ir.values" id="ir_mdc_order_bigc_validate">
 			<field name="key">action</field>
 			<field name="key2">client_action_multi</field>
-			<field name="model">mdc.raworder1</field>
+			<field name="model">mdc.order.bigc</field>
 			<field name="name">Validate Raw Order</field>
 			<field name="value"
 				eval="'ir.actions.server,' + str(ref('action_mdc_order_bigc_validate'))" />
@@ -297,7 +298,7 @@
 		<record model="ir.values" id="ir_mdc_order_bigc_convert">
 			<field name="key">action</field>
 			<field name="key2">client_action_multi</field>
-			<field name="model">mdc.raworder1</field>
+			<field name="model">mdc.order.bigc</field>
 			<field name="name">Convert Raw Order</field>
 			<field name="value"
 				eval="'ir.actions.server,' + str(ref('action_mdc_order_bigc_convert'))" />

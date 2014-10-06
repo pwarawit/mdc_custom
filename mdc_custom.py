@@ -8,13 +8,13 @@ class mdc_order_bigc(osv.osv):
     _name = 'mdc.order.bigc'
     _description = 'MDC Raw Order Big C'
     _columns = {
-    'mdcvld_date' : fields.date('Validation Date', required=False),
-    'mdcvld_ok' : fields.boolean('Validation overall OK?', required=False),
-    'mdcvld_custmap_ok' : fields.boolean('Customer Mapping OK?', required=False),
-    'mdcvld_prodmap_ok' : fields.boolean('Product Mapping OK?', required=False),
+    'mdcvld_date' : fields.datetime('Validate Date', required=False),
+    'mdcvld_ok' : fields.boolean('Validate OK?', required=False),
+    'mdcvld_custmap_ok' : fields.boolean('Customer Valid?', required=False),
+    'mdcvld_prodmap_ok' : fields.boolean('Product Valid?', required=False),
     'mdcvld_remark' : fields.text('Validation Remark', required=False),
-    'mdcso_date' : fields.date('Sale Order Creation Date', required=False),
-    'mdcso_ok' : fields.boolean('Sale Order has been Created?', required=False),
+    'mdcso_date' : fields.datetime('Convert Date', required=False),
+    'mdcso_ok' : fields.boolean('Convert OK?', required=False),             
     'mdcso_customer' : fields.char('SO Customer ', required=False),
     'mdcso_cust_delivery' : fields.char('SO Delivery Customer', required=False),
     'mdcso_cust_invoice' : fields.char('SO Invoice Customer', required=False),
@@ -100,7 +100,7 @@ class mdc_processlog(osv.osv):
     _columns = {
     'srce_model' : fields.char('Source Model', size=32, required=False),
     'process_name' : fields.char('Process Name', size=32, required=False),
-    'process_date' : fields.date('Process Date', required=False),
+    'process_date' : fields.datetime('Process Date', required=False),
     'log' : fields.text('Log Messages', required=False),
     }
 mdc_processlog
