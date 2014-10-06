@@ -4,15 +4,17 @@ import time
 import validate
 import convert
 
-class mdc_raworder1(osv.osv):
-    _name = 'mdc.raworder1'
-    _description = 'MDC Raw Order Format 1 (Big C)'
+class mdc_order_bigc(osv.osv):
+    _name = 'mdc.order.bigc'
+    _description = 'MDC Raw Order Big C'
     _columns = {
     'mdcvld_date' : fields.date('Validation Date', required=False),
     'mdcvld_ok' : fields.boolean('Validation overall OK?', required=False),
     'mdcvld_custmap_ok' : fields.boolean('Customer Mapping OK?', required=False),
     'mdcvld_prodmap_ok' : fields.boolean('Product Mapping OK?', required=False),
     'mdcvld_remark' : fields.text('Validation Remark', required=False),
+    'mdcso_date' : fields.date('Sale Order Creation Date', required=False),
+    'mdcso_ok' : fields.boolean('Sale Order has been Created?', required=False),
     'mdcso_customer' : fields.char('SO Customer ', required=False),
     'mdcso_cust_delivery' : fields.char('SO Delivery Customer', required=False),
     'mdcso_cust_invoice' : fields.char('SO Invoice Customer', required=False),
@@ -61,15 +63,14 @@ class mdc_raworder1(osv.osv):
     'textbox22' : fields.char('textbox22', size=256, required=False),
     'list4' : fields.char('list4', size=256, required=False),
     }
-    
+
     def validate(self, cr, uid, ids, context):
         validate.validate(self, cr, uid, context)
         
     def convert(self, cr, uid, ids, context):
         convert.convert(self, cr, uid, context)
         
-        
-mdc_raworder1
+mdc_order_bigc
 
 class mdc_custmap(osv.osv):
     _name = 'mdc.custmap'

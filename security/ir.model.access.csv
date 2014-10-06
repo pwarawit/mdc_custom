@@ -1,5 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_mdc_raworder1,mdc.raworder1,model_mdc_raworder1,group_mdc_user,1,1,1,1
+access_mdc_order_bigc,mdc.order.bigc,model_mdc_order_bigc,group_mdc_user,1,1,1,1
 access_mdc_custmap,mdc.custmap,model_mdc_custmap,group_mdc_user,1,1,1,1
 access_mdc_prodmap,mdc.prodmap,model_mdc_prodmap,group_mdc_user,1,1,1,1
 access_mdc_processlog,mdc.processlog,model_mdc_processlog,group_mdc_user,1,1,1,1

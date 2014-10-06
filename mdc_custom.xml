@@ -3,11 +3,28 @@
 	<data>
 
 		<!-- View Definitions -->
-		<record id="mdc_raworder1_form" model="ir.ui.view">
-			<field name="name">mdc.raworder1.form</field>
-			<field name="model">mdc.raworder1</field>
+		<record id="mdc_order_bigc_form" model="ir.ui.view">
+			<field name="name">mdc.order.bigc.form</field>
+			<field name="model">mdc.order.bigc</field>
 			<field name="arch" type="xml">
-				<form string="MDC Raw Order Format 1 (Big C)">
+				<form string="MDC Order Big C">
+					<field name='mdcvld_date' />
+					<field name='mdcvld_ok' />
+					<field name='mdcvld_custmap_ok' />
+					<field name='mdcvld_prodmap_ok' />
+					<field name='mdcvld_remark' />
+					<field name='mdcso_date' />
+					<field name='mdcso_ok' />
+					<field name='mdcso_customer' />
+					<field name='mdcso_cust_delivery' />
+					<field name='mdcso_cust_invoice' />
+					<field name='mdcso_orderdate' />
+					<field name='mdcso_deliverydate' />
+					<field name='mdcso_order_ref' />
+					<field name='mdcso_prod_linenum' />
+					<field name='mdcso_prod_name' />
+					<field name='mdcso_prod_qty' />
+					<field name='mdcso_prod_price' />
 					<field name='deptcode' />
 					<field name='podate' />
 					<field name='deliverydate' />
@@ -45,29 +62,14 @@
 					<field name='textbox17' />
 					<field name='textbox22' />
 					<field name='list4' />
-					<field name='mdcvld_date' />
-					<field name='mdcvld_ok' />
-					<field name='mdcvld_custmap_ok' />
-					<field name='mdcvld_prodmap_ok' />
-					<field name='mdcvld_remark' />
-					<field name='mdcso_customer' />
-					<field name='mdcso_cust_delivery' />
-					<field name='mdcso_cust_invoice' />
-					<field name='mdcso_orderdate' />
-					<field name='mdcso_deliverydate' />
-					<field name='mdcso_order_ref' />
-					<field name='mdcso_prod_linenum' />
-					<field name='mdcso_prod_name' />
-					<field name='mdcso_prod_qty' />
-					<field name='mdcso_prod_price' />
 				</form>
 			</field>
 		</record>
-		<record id="mdc_raworder1_tree" model="ir.ui.view">
-			<field name="name">mdc.raworder1.tree</field>
-			<field name="model">mdc.raworder1</field>
+		<record id="mdc_order_bigc_tree" model="ir.ui.view">
+			<field name="name">mdc.order.bigc.tree</field>
+			<field name="model">mdc.order.bigc</field>
 			<field name="arch" type="xml">
-				<tree string="MDC Raw Order Format 1 (Big C)">
+				<tree string="MDC Order Big C">
 					<field name='mdcvld_date' />
 					<field name='mdcvld_ok' />
 					<field name='podate' />
@@ -155,33 +157,18 @@
 				</form>
 			</field>
 		</record>
-            <!-- 
-        <record id="mdc_customer_list" model="ir.ui.view">
-            <field name="name">mdc.customer.list</field>
-            <field name="model">res.partner</field>
- 
-            <field name="inherit_id" ref="base.view_partner_form" />
-             
-            <field name="priority" eval="20"/>
-            
-            <field name="arch" type="xml">
-                <form string="Customers">
-                    <field name='name' />
-                    <field name='state' />
-                    <field name='street' />
-                    <field name='phone' />
-                    <field name='mobile' />
-                    <field name='email' />
-                </form>
-            </field>
-        </record>
-		-->
+		<!-- <record id="mdc_customer_list" model="ir.ui.view"> <field name="name">mdc.customer.list</field> 
+			<field name="model">res.partner</field> <field name="inherit_id" ref="base.view_partner_form" 
+			/> <field name="priority" eval="20"/> <field name="arch" type="xml"> <form 
+			string="Customers"> <field name='name' /> <field name='state' /> <field name='street' 
+			/> <field name='phone' /> <field name='mobile' /> <field name='email' /> 
+			</form> </field> </record> -->
 
 		<!-- Action Definitions -->
-		<record model="ir.actions.act_window" id="action_mdc_raworder1">
-			<field name="name">MDC Raw Order Format 1 - (Big C)</field>
-			<field name="res_model">mdc.raworder1</field>
-			<field name="view_id" ref="mdc_raworder1_tree" />
+		<record model="ir.actions.act_window" id="action_mdc_order_bigc">
+			<field name="name">MDC Order Big C</field>
+			<field name="res_model">mdc.order.bigc</field>
+			<field name="view_id" ref="mdc_order_bigc_tree" />
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 			<field name="context">{}</field>
@@ -210,86 +197,73 @@
 			<field name="view_mode">tree,form</field>
 			<field name="context">{}</field>
 		</record>
-		<!-- 
-        <record model="ir.actions.act_window" id="action_mdc_customer_list">
-            <field name="name">Customer</field>
-            <field name="res_model">res.partner</field>
-            <field name="view_id" ref="mdc_customer_list" />
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="context">{}</field>
-        </record>		
- -->
- 
+		<!-- <record model="ir.actions.act_window" id="action_mdc_customer_list"> 
+			<field name="name">Customer</field> <field name="res_model">res.partner</field> 
+			<field name="view_id" ref="mdc_customer_list" /> <field name="view_type">form</field> 
+			<field name="view_mode">tree,form</field> <field name="context">{}</field> 
+			</record> -->
+
 		<!-- Menu Definitions -->
-		<!-- 
-		<menuitem id="mdc_menu_0" name="ModernCare" action="action_mdc_raworder1"
+		<!-- <menuitem id="mdc_menu_0" name="ModernCare" action="action_mdc_raworder1" 
+			sequence="1" /> <menuitem id="mdc_menu_10" name="Raw Order" action="action_mdc_raworder1" 
+			sequence="10" parent="mdc_menu_0" /> <menuitem id="mdc_menu_11" name="Big 
+			C" action="action_mdc_raworder1" sequence="11" parent="mdc_menu_10" /> <menuitem 
+			id="mdc_menu_20" name="Order Processing Log" action="action_mdc_processlog_vld" 
+			sequence="20" parent="mdc_menu_0" /> <menuitem id="mdc_menu_21" name="Validation" 
+			action="action_mdc_processlog_vld" sequence="21" parent="mdc_menu_20" /> 
+			<menuitem id="mdc_menu_40" name="Configurations" action="action_mdc_custmap" 
+			sequence="40" parent="mdc_menu_0" /> <menuitem id="mdc_menu_41" name="Customer 
+			Mapping" action="action_mdc_custmap" sequence="41" parent="mdc_menu_40" /> 
+			<menuitem id="mdc_menu_42" name="Product Mapping" action="action_mdc_prodmap" 
+			sequence="42" parent="mdc_menu_40" /> -->
+		<!-- -->
+		<menuitem id="mdc_menu_main" name="ModernCare" action="sale.action_quotations"
 			sequence="1" />
-		<menuitem id="mdc_menu_10" name="Raw Order" action="action_mdc_raworder1"
-			sequence="10" parent="mdc_menu_0" />
-		<menuitem id="mdc_menu_11" name="Big C" action="action_mdc_raworder1"
-			sequence="11" parent="mdc_menu_10" />
-		<menuitem id="mdc_menu_20" name="Order Processing Log"
-			action="action_mdc_processlog_vld" sequence="20" parent="mdc_menu_0" />
-		<menuitem id="mdc_menu_21" name="Validation" action="action_mdc_processlog_vld"
-			sequence="21" parent="mdc_menu_20" />
-		<menuitem id="mdc_menu_40" name="Configurations" action="action_mdc_custmap"
-			sequence="40" parent="mdc_menu_0" />
-		<menuitem id="mdc_menu_41" name="Customer Mapping" action="action_mdc_custmap"
-			sequence="41" parent="mdc_menu_40" />
-		<menuitem id="mdc_menu_42" name="Product Mapping" action="action_mdc_prodmap"
-			sequence="42" parent="mdc_menu_40" />
-			 -->
-        <!-- --> 			
-        <menuitem id="mdc_menu_main" name="ModernCare" action="sale.action_quotations"
-            sequence="1" />
-        <menuitem id="mdc_menu_sales" name="Sales" action="sale.action_quotations"
-            sequence="10" parent="mdc_menu_main" />
-        <menuitem id="mdc_menu_sales_quotations" name="Quotations" action="sale.action_quotations"
-            sequence="1010" parent="mdc_menu_sales" />
-        <menuitem id="mdc_menu_sales_orders" name="Sales Orders" action="sale.action_orders"
-            sequence="1020" parent="mdc_menu_sales" />            
-		<menuitem id="mdc_menu_warehouse" name="Warehouse" action="sale.action_quotations"
-            sequence="20" parent="mdc_menu_main" />
-        <menuitem id="mdc_menu_warehouse_delivery" name="Delivery Orders" action="stock.action_picking_tree"
-            sequence="2010" parent="mdc_menu_warehouse" />
-        <menuitem id="mdc_menu_masterdata" name="Master Data" action="sale.action_quotations"
-            sequence="30" parent="mdc_menu_main" />  
-        <!--       <menuitem id="mdc_menu_masterdata_customer" name="Customers" action="base.action_contacts"
-            sequence="3010" parent="mdc_menu_masterdata" />
-            -->
-        <menuitem id="mdc_menu_masterdata_products" name="Products" action="product.product_normal_action"
-            sequence="3020" parent="mdc_menu_masterdata" />    
-        <menuitem id="mdc_menu_masterdata_productscategory" name="Products by Category" action="product.product_category_action"
-            sequence="3030" parent="mdc_menu_masterdata" />    
-        <menuitem id="mdc_menu_batchorders" name="Batch Orders" action="action_mdc_raworder1"
-            sequence="40" parent="mdc_menu_main" />
-        <menuitem id="mdc_menu_order_bigc" name="Big C Orders" action="action_mdc_raworder1"
-            sequence="4010" parent="mdc_menu_batchorders" />            
-        <menuitem id="mdc_menu_order_lotus" name="Lotus Orders" action="action_mdc_raworder1"
-            sequence="4020" parent="mdc_menu_batchorders" />   
-        <menuitem id="mdc_menu_order_robinson" name="Robinson Orders" action="action_mdc_raworder1"
-            sequence="4030" parent="mdc_menu_batchorders" />   
-        <menuitem id="mdc_menu_process_log" name="Processing Log" action="action_mdc_processlog_vld"
-            sequence="4040" parent="mdc_menu_batchorders" />               
-	   <menuitem id="mdc_menu_reports" name="Reports" action="action_mdc_raworder1"
-    		sequence="50" parent="mdc_menu_main" />
-    	<menuitem id="mdc_menu_config" name="Configurations" action="action_mdc_raworder1"
-	   	   sequence="50" parent="mdc_menu_main" />
-        <menuitem id="mdc_menu_custmap" name="Customer Mapping" action="action_mdc_custmap"
-            sequence="5010" parent="mdc_menu_config" />
-        <menuitem id="mdc_menu_prodmap" name="Product Mapping" action="action_mdc_prodmap"
-            sequence="5020" parent="mdc_menu_config" />                	
-        			
+		<menuitem id="mdc_menu_sales" name="Sales" action="sale.action_quotations"
+			sequence="10" parent="mdc_menu_main" />
+		<menuitem id="mdc_menu_sales_quotations" name="Quotations"
+			action="sale.action_quotations" sequence="1010" parent="mdc_menu_sales" />
+		<menuitem id="mdc_menu_sales_orders" name="Sales Orders"
+			action="sale.action_orders" sequence="1020" parent="mdc_menu_sales" />
+		<menuitem id="mdc_menu_warehouse" name="Warehouse"
+			action="sale.action_quotations" sequence="20" parent="mdc_menu_main" />
+		<menuitem id="mdc_menu_warehouse_delivery" name="Delivery Orders"
+			action="stock.action_picking_tree" sequence="2010" parent="mdc_menu_warehouse" />
+		<menuitem id="mdc_menu_masterdata" name="Master Data"
+			action="sale.action_quotations" sequence="30" parent="mdc_menu_main" />
+		<!-- <menuitem id="mdc_menu_masterdata_customer" name="Customers" action="base.action_contacts" 
+			sequence="3010" parent="mdc_menu_masterdata" /> -->
+		<menuitem id="mdc_menu_masterdata_products" name="Products"
+			action="product.product_normal_action" sequence="3020" parent="mdc_menu_masterdata" />
+		<menuitem id="mdc_menu_masterdata_productscategory" name="Products by Category"
+			action="product.product_category_action" sequence="3030"
+			parent="mdc_menu_masterdata" />
+		<menuitem id="mdc_menu_batchorders" name="Batch Orders"
+			action="action_mdc_order_bigc" sequence="40" parent="mdc_menu_main" />
+		<menuitem id="mdc_menu_order_bigc" name="Big C Orders"
+			action="action_mdc_order_bigc" sequence="4010" parent="mdc_menu_batchorders" />
+		<menuitem id="mdc_menu_order_lotus" name="Lotus Orders"
+			action="action_mdc_order_bigc" sequence="4020" parent="mdc_menu_batchorders" />
+		<menuitem id="mdc_menu_order_robinson" name="Robinson Orders"
+			action="action_mdc_order_bigc" sequence="4030" parent="mdc_menu_batchorders" />
+		<menuitem id="mdc_menu_process_log" name="Processing Log"
+			action="action_mdc_processlog_vld" sequence="4040" parent="mdc_menu_batchorders" />
+		<menuitem id="mdc_menu_reports" name="Reports" action="action_mdc_order_bigc"
+			sequence="50" parent="mdc_menu_main" />
+		<menuitem id="mdc_menu_config" name="Configurations" action="action_mdc_order_bigc"
+			sequence="50" parent="mdc_menu_main" />
+		<menuitem id="mdc_menu_custmap" name="Customer Mapping"
+			action="action_mdc_custmap" sequence="5010" parent="mdc_menu_config" />
+		<menuitem id="mdc_menu_prodmap" name="Product Mapping"
+			action="action_mdc_prodmap" sequence="5020" parent="mdc_menu_config" />
+
 
 		<!-- Server Action Definitions -->
-		<record model="ir.actions.server" id="action_mdc_raworder1_validate">
+		<record model="ir.actions.server" id="action_mdc_order_bigc_validate">
 			<field name="sequence" eval="5" />
 			<field name="state">code</field>
 			<field name="type">ir.actions.server</field>
-			<field name="model_id" search="[('model','=','mdc.raworder1')]" />
-			<!-- <field name="code">self.validate(cr, uid, context.get('active_ids'), 
-				context) </field> -->
+			<field name="model_id" search="[('model','=','mdc.order.bigc')]" />
 			<field name="code">
 				action = self.validate(cr, uid,
 				context.get('active_ids'), context)
@@ -298,11 +272,11 @@
 			<field name="condition">True</field>
 			<field name="name">Validate</field>
 		</record>
-		<record model="ir.actions.server" id="action_mdc_raworder1_convert">
+		<record model="ir.actions.server" id="action_mdc_order_bigc_convert">
 			<field name="sequence" eval="5" />
 			<field name="state">code</field>
 			<field name="type">ir.actions.server</field>
-			<field name="model_id" search="[('model','=','mdc.raworder1')]" />
+			<field name="model_id" search="[('model','=','mdc.order.bigc')]" />
 			<field name="code">
 				action = self.convert(cr, uid,
 				context.get('active_ids'), context)
@@ -312,21 +286,21 @@
 		</record>
 
 		<!-- Server Action Binding -->
-		<record model="ir.values" id="ir_mdc_raworder1_validate">
+		<record model="ir.values" id="ir_mdc_order_bigc_validate">
 			<field name="key">action</field>
 			<field name="key2">client_action_multi</field>
 			<field name="model">mdc.raworder1</field>
 			<field name="name">Validate Raw Order</field>
 			<field name="value"
-				eval="'ir.actions.server,' + str(ref('action_mdc_raworder1_validate'))" />
+				eval="'ir.actions.server,' + str(ref('action_mdc_order_bigc_validate'))" />
 		</record>
-		<record model="ir.values" id="ir_mdc_raworder1_convert">
+		<record model="ir.values" id="ir_mdc_order_bigc_convert">
 			<field name="key">action</field>
 			<field name="key2">client_action_multi</field>
 			<field name="model">mdc.raworder1</field>
 			<field name="name">Convert Raw Order</field>
 			<field name="value"
-				eval="'ir.actions.server,' + str(ref('action_mdc_raworder1_convert'))" />
+				eval="'ir.actions.server,' + str(ref('action_mdc_order_bigc_convert'))" />
 		</record>
 
 	</data>
