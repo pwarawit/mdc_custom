@@ -56,7 +56,9 @@ def convert(self, cr, uid, context):
                     "partner_shipping_id" : partner_id[0],
                     "pricelist_id" : pricelist_id,
                     "state" : "draft",
-                    "origin" : poline_list[0]["mdcso_order_ref"]}
+                    "client_order_ref" : poline_list[0]["mdcso_order_ref"],
+                    "date_order" : poline_list[0]["mdcso_orderdate"],
+                    "date_expected" : poline_list[0]["mdcso_deliverydate"]}
         
         # log_msg = log_msg + "\n" + str(so_value) + "\n"        
         log_msg = log_msg + "\n  PO: " + po_rec + " contains " + str(len(poline_list)) + " lines."

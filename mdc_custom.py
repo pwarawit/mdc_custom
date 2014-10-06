@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from osv import osv, fields
 import time
+import datetime
 import validate
 import convert
 
@@ -104,5 +105,22 @@ class mdc_processlog(osv.osv):
     'log' : fields.text('Log Messages', required=False),
     }
 mdc_processlog
+
+class sale_order(osv.osv):
+
+    _inherit = "sale.order"
+
+    _columns = {
+        'date_expected': fields.date('Expected Delivery Date', required=True, readonly=True, states={'draft': [('readonly', False)]}),
+    }
+    _defaults = {
+        'date_expected': lambda *a: datetime.datetime.now().strftime('%Y-%m-%d'),
+    }
+
+    def _get_date_planned(self, cr, uid, order, line, start_date, context=None):
+        # Overwrite with this date
+        return order.date_expected
+
+sale_order()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4
