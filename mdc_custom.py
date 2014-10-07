@@ -112,6 +112,7 @@ class sale_order(osv.osv):
 
     _columns = {
         'date_expected': fields.date('Expected Delivery Date', required=True, readonly=True, states={'draft': [('readonly', False)]}),
+        'inv_ref' : fields.char('Ref.Invoice No', size=64)
     }
     _defaults = {
         'date_expected': lambda *a: datetime.datetime.now().strftime('%Y-%m-%d'),

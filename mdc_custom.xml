@@ -167,6 +167,7 @@
             <field name="arch" type="xml">
                 <field name="date_order" position="after">
                     <field name='date_expected'/>
+                    <field name='inv_ref'/>
                 </field>
             </field>
         </record>
