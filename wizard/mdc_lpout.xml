@@ -1,9 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <openerp>
-    <data>
+	<data>
+		<!-- Define view for LP Out Wizard -->
+		<record id="view_lpout_wizard" model="ir.ui.view">
+			<field name="name">mdc.settings.lpout</field>
+			<field name="model">mdc.settings.lpout</field>
+			<field name="arch" type="xml">
+				<form string="Select LP Out Settings" version="7.0">
+                    <group>
+                        <field name="name"/>
+                    </group>
+					<footer>
+						<button name="action_create_lpout" string="Create LP OUT data"
+							type="object" class="oe_highlight" />
+						or
+						<button string="Cancel" class="oe_link" special="cancel" />
+					</footer>
 
+				</form>
+			</field>
+		</record>
 
-    </data>
+	</data>
 
 </openerp>
