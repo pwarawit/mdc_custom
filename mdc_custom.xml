@@ -158,6 +158,35 @@
 				</form>
 			</field>
 		</record>
+		
+	<record id="mdc_settings_lpout_form" model="ir.ui.view">
+		<field name="name">mdc.settings.lpout.form</field>
+		<field name="model">mdc.settings.lpout</field>
+		<field name="arch" type="xml">
+			<form string="LP OUT File Creation Settings">
+				<field name='name' />
+				<field name='header' />
+				<field name='deliverorder' />
+				<field name='doitem' />
+				<field name='material' />
+				<field name='materialdescription' />
+				<field name='salesunit' />
+				<field name='dateformat' />
+				<field name='timeformat' />
+				<field name='deliveryorderdate' />
+				<field name='createdby' />
+				<field name='shiptoparty' />
+				<field name='shiptoname' />
+				<field name='street' />
+				<field name='stree2' />
+				<field name='city' />
+				<field name='postalcode' />
+				<field name='salesorder' />
+				<field name='salesorderitem' />
+			</form>
+		</field>
+	</record>
+		
 
 		<record id="view_order_form_ext" model="ir.ui.view">
 			<field name="name">view.order.form.ext</field>
@@ -171,13 +200,6 @@
 				</field>
 			</field>
 		</record>
-
-		<!-- <record id="mdc_customer_list" model="ir.ui.view"> <field name="name">mdc.customer.list</field> 
-			<field name="model">res.partner</field> <field name="inherit_id" ref="base.view_partner_form" 
-			/> <field name="priority" eval="20"/> <field name="arch" type="xml"> <form 
-			string="Customers"> <field name='name' /> <field name='state' /> <field name='street' 
-			/> <field name='phone' /> <field name='mobile' /> <field name='email' /> 
-			</form> </field> </record> -->
 
 		<!-- Action Definitions -->
 		<record model="ir.actions.act_window" id="action_mdc_order_bigc">
@@ -220,6 +242,14 @@
 			<field name="domain">[('customer','=',True)]</field>
 			<field name="context">{}</field>
 		</record>
+        <record model="ir.actions.act_window" id="action_mdc_settings_lpout">
+            <field name="name">LP OUT Creation Settings</field>
+            <field name="res_model">mdc.settings.lpout</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>		
 
 		<!-- Menu Definitions -->
 		<menuitem id="mdc_menu_main" name="ModernCare" action="sale.action_quotations"
@@ -261,7 +291,8 @@
 			action="action_mdc_custmap" sequence="5010" parent="mdc_menu_config" />
 		<menuitem id="mdc_menu_prodmap" name="Product Mapping"
 			action="action_mdc_prodmap" sequence="5020" parent="mdc_menu_config" />
-
+        <menuitem id="mdc_menu_settingslpout" name="LP OUT File Settings"
+            action="action_mdc_settings_lpout" sequence="5030" parent="mdc_menu_config" />
 
 		<!-- Server Action Definitions -->
 		<record model="ir.actions.server" id="action_mdc_order_bigc_validate">

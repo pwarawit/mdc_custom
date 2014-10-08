@@ -2,7 +2,7 @@
 
 <openerp>
 	<data>
-		<!-- Define view for LP Out Wizard -->
+		<!-- Define view for LP Out Wizard 
 		<record id="view_lpout_wizard" model="ir.ui.view">
 			<field name="name">mdc.settings.lpout</field>
 			<field name="model">mdc.settings.lpout</field>
@@ -21,7 +21,7 @@
 				</form>
 			</field>
 		</record>
-
+-->
 	</data>
 
 </openerp>

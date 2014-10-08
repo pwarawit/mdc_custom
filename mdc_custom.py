@@ -124,4 +124,37 @@ class sale_order(osv.osv):
 
 sale_order()
 
+class mdc_settings_lpout(osv.osv):
+    _name = 'mdc.settings.lpout'
+    _description = 'LP Output Creation Settings'
+    _columns = {
+'name' : fields.char('Setting Name', size=64, required=True),
+    'header' : fields.text('Column Header', required=False),
+    'deliverorder' : fields.char('Delivery Order Mapping', size=64, required=False),
+    'doitem' : fields.integer('DO Item Steps', required=False),
+    'material' : fields.char('Material Mapping', size=64, required=False),
+    'materialdescription' : fields.char('Material Description Mapping', size=64, required=False),
+    'salesunit' : fields.char('Sales Unit', size=64, required=False),
+    'dateformat' : fields.char('Date Format', size=64, required=False),
+    'timeformat' : fields.char('Time Format', size=64, required=False),
+    'deliveryorderdate' : fields.char('Delivery Order Date Mapping', size=64, required=False),
+    'createdby' : fields.char('Created by Mapping', size=64, required=False),
+    'shiptoparty' : fields.char('Ship-To Party Mapping', size=64, required=False),
+    'shiptoname' : fields.char('Ship-To Name Mapping', size=64, required=False),
+    'street' : fields.char('Street Mapping', size=64, required=False),
+    'stree2' : fields.char('Street2 Mapping', size=64, required=False),
+    'city' : fields.char('City Mapping', size=64, required=False),
+    'postalcode' : fields.char('Postal Code Mapping', size=64, required=False),
+    'salesorder' : fields.char('Sales Order Mapping', size=64, required=False),
+    'salesorderitem' : fields.char('Sales Order Item Mapping', size=64, required=False),
+    }
+    _defaults = {
+        'header':
+        '''Delivery Order,DO Item,Material,Material Description,Delivery Qty,Sales Unit,Planned GI Date,Planned GI Time,Delivery Order Date,Created By,Ship-to Party,Ship-to Name,Street,Street2,Street3,City,Postal Code,Sales Order,Sales Order Item
+        ''',
+        'doitem' : 10
+    }
+
+mdc_settings_lpout()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4
