@@ -5,7 +5,6 @@ import datetime
 import validate
 import convert
 import create_lpout
-import contextlib
 
 class mdc_order_bigc(osv.osv):
     _name = 'mdc.order.bigc'
@@ -123,6 +122,13 @@ class sale_order(osv.osv):
         'date_expected': lambda *a: datetime.datetime.now().strftime('%Y-%m-%d'),
     }
 
+    def _prepare_order_picking(self, cr, uid, order, context=None):
+        vals = super(sale_order, self)._prepare_order_picking(cr, uid, order, context=context)
+        vals.update({'date_expected': order.date_expected,
+                     'inv_ref': order.inv_ref,
+                     'client_order_ref': order.client_order_ref})
+        return vals
+    
     def _get_date_planned(self, cr, uid, order, line, start_date, context=None):
         # Overwrite with this date
         return order.date_expected
@@ -132,9 +138,16 @@ sale_order()
 class stock_picking_out(osv.osv):
 
     _inherit = "stock.picking.out"
+    _columns = {
+        'date_expected': fields.date('Expected Delivery Date', required=True, readonly=True, states={'draft': [('readonly', False)]}),
+        'inv_ref' : fields.char('Ref.Invoice No', size=64),
+        'client_order_ref': fields.char('Customer Reference', size=64),
+    }
 
     def create_lpout(self, cr, uid, ids, context):
         create_lpout.create_lpout(self, cr, uid,'bigc', context)
+    
+
 
 stock_picking_out()
 
