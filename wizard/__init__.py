@@ -19,10 +19,7 @@
 #
 ##############################################################################
 
-import validate
-import convert
-import mdc_custom
-import wizard
+import mdc_lpout
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
