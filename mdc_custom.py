@@ -4,6 +4,8 @@ import time
 import datetime
 import validate
 import convert
+import create_lpout
+import contextlib
 
 class mdc_order_bigc(osv.osv):
     _name = 'mdc.order.bigc'
@@ -71,6 +73,9 @@ class mdc_order_bigc(osv.osv):
     def convert(self, cr, uid, ids, context):
         convert.convert(self, cr, uid, context)
         
+#     def create_lpout(self, cr, uid, ids, context):
+#         create_lpout.create_lpout(self, cr, uid, context)
+        
 mdc_order_bigc
 
 class mdc_custmap(osv.osv):
@@ -121,8 +126,17 @@ class sale_order(osv.osv):
     def _get_date_planned(self, cr, uid, order, line, start_date, context=None):
         # Overwrite with this date
         return order.date_expected
-
+    
 sale_order()
+
+class stock_picking_out(osv.osv):
+
+    _inherit = "stock.picking.out"
+
+    def create_lpout(self, cr, uid, ids, context):
+        create_lpout.create_lpout(self, cr, uid,'bigc', context)
+
+stock_picking_out()
 
 class mdc_settings_lpout(osv.osv):
     _name = 'mdc.settings.lpout'
