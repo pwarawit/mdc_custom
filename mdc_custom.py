@@ -110,11 +110,10 @@ class mdc_processlog(osv.osv):
     }
 mdc_processlog
 
-class sale_order(osv.osv):
-
-    _name = "sale.order"
+class sale_order(osv.Model):
+    
     _inherit = "sale.order"
-
+    
     _columns = {
         'date_expected': fields.date('Expected Delivery Date', required=False, readonly=False),
         'inv_ref' : fields.char('Ref.Invoice No', size=64)
@@ -123,41 +122,18 @@ class sale_order(osv.osv):
         'date_expected': lambda *a: datetime.datetime.now().strftime('%Y-%m-%d'),
     }
     
-    # What if I completely OVERWRITE IT?
-    def _prepare_order_picking(self, cr, uid, order, context=None):
-        pick_name = self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.out')
-        return {
-            'name': pick_name,
-            'origin': order.name,
-            'date': self.date_to_datetime(cr, uid, order.date_order, context),
-            'type': 'out',
-            'state': 'auto',
-            'move_type': order.picking_policy,
-            'sale_id': order.id,
-            'partner_id': order.partner_shipping_id.id,
-            'note': order.note,
-            'invoice_state': (order.order_policy=='picking' and '2binvoiced') or 'none',
-            'company_id': order.company_id.id,
-            # Add by Yoo
-            'inv_ref' : order.inv_ref,
-            'client_order_ref' : 'fuck you',
-            'date_expected' : order.date_expected            
-        }
 #     def _prepare_order_picking(self, cr, uid, order, context=None):
 #         vals = super(sale_order, self)._prepare_order_picking(cr, uid, order, context=context)
-#         vals['date_expected'] = datetime.datetime.now()
-#         vals['inv_ref'] = 'IV12345678888'
-#         vals['client_order_ref'] = 'CLIENT88936' 
-# #         vals.update({'date_expected': datetime.datetime.now(),
-# #                      'inv_ref': order,
-# #                      'client_order_ref': 'test'})
+#         vals.update({'date_expected': order.date_expected,
+#                      'inv_ref': order.inv_ref,
+#                      'client_order_ref': order.client_order_ref})
 #         return vals
     
     def _get_date_planned(self, cr, uid, order, line, start_date, context=None):
         # Overwrite with this date
         return order.date_expected
     
-sale_order()
+sale_order
 
 class stock_picking(osv.osv):
 
@@ -168,30 +144,47 @@ class stock_picking(osv.osv):
         'client_order_ref': fields.char('Customer Reference', size=64),
     }
     
-    def create_lpout(self, cr, uid, ids, context):
-        create_lpout.create_lpout(self, cr, uid,'bigc', context)
+#     def create(self, cr, user, vals, context=None):
+#         if ('name' not in vals) or (vals.get('name')=='/'):
+#             seq_obj_name =  self._name
+#             vals['name'] = self.pool.get('ir.sequence').get(cr, user, seq_obj_name)
+#             vals.update({'date_expected': datetime.datetime.now().strftime('%Y-%m-%d'),
+#                          'inv_ref': 'invoice2014-10-09',
+#                          'client_order_ref': 'order.client_order_ref'})
+#         new_id = super(stock_picking, self).create(cr, user, vals, context)
+#         return new_id
 
-stock_picking()
+stock_picking
 
 class stock_picking_out(osv.osv):
- 
+  
     _inherit = "stock.picking.out"
     _columns = {
         'date_expected': fields.date('Expected Delivery Date', required=False, readonly=False),
         'inv_ref' : fields.char('Ref.Invoice No', size=64),
         'client_order_ref': fields.char('Customer Reference', size=64),
     }
- 
+    
+    def create(self, cr, user, vals, context=None):
+        if ('name' not in vals) or (vals.get('name')=='/'):
+            seq_obj_name =  self._name
+            vals['name'] = self.pool.get('ir.sequence').get(cr, user, seq_obj_name)
+            vals.update({'date_expected': datetime.datetime.now().strftime('%Y-%m-%d'),
+                         'inv_ref': 'invoice2014-10-09',
+                         'client_order_ref': 'order.client_order_ref'})
+        new_id = super(stock_picking, self).create(cr, user, vals, context)
+        return new_id
+  
     def create_lpout(self, cr, uid, ids, context):
         create_lpout.create_lpout(self, cr, uid,'bigc', context)
- 
-stock_picking_out()
+  
+stock_picking_out
 
 class mdc_settings_lpout(osv.osv):
     _name = 'mdc.settings.lpout'
     _description = 'LP Output Creation Settings'
     _columns = {
-'name' : fields.char('Setting Name', size=64, required=True),
+    'name' : fields.char('Setting Name', size=64, required=True),
     'header' : fields.text('Column Header', required=False),
     'deliverorder' : fields.char('Delivery Order Mapping', size=64, required=False),
     'doitem' : fields.integer('DO Item Steps', required=False),
@@ -218,6 +211,6 @@ class mdc_settings_lpout(osv.osv):
         'doitem' : 10
     }
 
-mdc_settings_lpout()
+mdc_settings_lpout
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4
