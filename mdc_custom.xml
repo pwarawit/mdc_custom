@@ -333,6 +333,18 @@
 			<field name="condition">True</field>
 			<field name="name">Convert</field>
 		</record>
+        <record model="ir.actions.server" id="action_mdc_get_info_from_so">
+            <field name="sequence" eval="5" />
+            <field name="state">code</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" search="[('model','=','stock.picking.out')]" />
+            <field name="code">
+                action = self.get_info_from_so(cr, uid,
+                context.get('active_ids'), context)
+            </field>
+            <field name="condition">True</field>
+            <field name="name">Get info from Sales Order</field>
+        </record>		
         <record model="ir.actions.server" id="action_mdc_create_lpout">
             <field name="sequence" eval="5" />
             <field name="state">code</field>
@@ -364,13 +376,21 @@
 			<field name="value"
 				eval="'ir.actions.server,' + str(ref('action_mdc_order_bigc_convert'))" />
 		</record>
+		<record model="ir.values" id="ir_mdc_get_info_from_so">
+            <field name="key">action</field>
+            <field name="key2">client_action_multi</field>
+            <field name="model">stock.picking.out</field>
+            <field name="name">Get info from Sales Order</field>
+            <field name="value"
+                eval="'ir.actions.server,' + str(ref('action_mdc_create_lpout'))" />
+        </record>
         <record model="ir.values" id="ir_mdc_create_lpout">
             <field name="key">action</field>
             <field name="key2">client_action_multi</field>
             <field name="model">stock.picking.out</field>
             <field name="name">Create LP OUT file</field>
             <field name="value"
-                eval="'ir.actions.server,' + str(ref('action_mdc_create_lpout'))" />
+                eval="'ir.actions.server,' + str(ref('action_mdc_get_info_from_so'))" />
         </record>
 	</data>
 

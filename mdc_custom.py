@@ -2,6 +2,8 @@
 from osv import osv, fields
 import time
 import datetime
+from openerp.osv import osv
+from openerp.tools.translate import _
 import validate
 import convert
 import create_lpout
@@ -70,11 +72,7 @@ class mdc_order_bigc(osv.osv):
         validate.validate(self, cr, uid, context)
         
     def convert(self, cr, uid, ids, context):
-        convert.convert(self, cr, uid, context)
-        
-#     def create_lpout(self, cr, uid, ids, context):
-#         create_lpout.create_lpout(self, cr, uid, context)
-        
+        convert.convert(self, cr, uid, context)       
 mdc_order_bigc
 
 class mdc_custmap(osv.osv):
@@ -110,24 +108,17 @@ class mdc_processlog(osv.osv):
     }
 mdc_processlog
 
-class sale_order(osv.Model):
+class sale_order(osv.osv):
     
     _inherit = "sale.order"
     
     _columns = {
         'date_expected': fields.date('Expected Delivery Date', required=False, readonly=False),
         'inv_ref' : fields.char('Ref.Invoice No', size=64)
-    }
+        }
     _defaults = {
         'date_expected': lambda *a: datetime.datetime.now().strftime('%Y-%m-%d'),
-    }
-    
-#     def _prepare_order_picking(self, cr, uid, order, context=None):
-#         vals = super(sale_order, self)._prepare_order_picking(cr, uid, order, context=context)
-#         vals.update({'date_expected': order.date_expected,
-#                      'inv_ref': order.inv_ref,
-#                      'client_order_ref': order.client_order_ref})
-#         return vals
+        }
     
     def _get_date_planned(self, cr, uid, order, line, start_date, context=None):
         # Overwrite with this date
@@ -136,47 +127,53 @@ class sale_order(osv.Model):
 sale_order
 
 class stock_picking(osv.osv):
-
+  
     _inherit = "stock.picking"
+    
     _columns = {
         'date_expected': fields.date('Expected Delivery Date', required=False, readonly=False),
         'inv_ref' : fields.char('Ref.Invoice No', size=64),
         'client_order_ref': fields.char('Customer Reference', size=64),
     }
     
-#     def create(self, cr, user, vals, context=None):
-#         if ('name' not in vals) or (vals.get('name')=='/'):
-#             seq_obj_name =  self._name
-#             vals['name'] = self.pool.get('ir.sequence').get(cr, user, seq_obj_name)
-#             vals.update({'date_expected': datetime.datetime.now().strftime('%Y-%m-%d'),
-#                          'inv_ref': 'invoice2014-10-09',
-#                          'client_order_ref': 'order.client_order_ref'})
-#         new_id = super(stock_picking, self).create(cr, user, vals, context)
-#         return new_id
-
 stock_picking
 
 class stock_picking_out(osv.osv):
   
     _inherit = "stock.picking.out"
+    
     _columns = {
         'date_expected': fields.date('Expected Delivery Date', required=False, readonly=False),
         'inv_ref' : fields.char('Ref.Invoice No', size=64),
         'client_order_ref': fields.char('Customer Reference', size=64),
     }
     
-    def create(self, cr, user, vals, context=None):
-        if ('name' not in vals) or (vals.get('name')=='/'):
-            seq_obj_name =  self._name
-            vals['name'] = self.pool.get('ir.sequence').get(cr, user, seq_obj_name)
-            vals.update({'date_expected': datetime.datetime.now().strftime('%Y-%m-%d'),
-                         'inv_ref': 'invoice2014-10-09',
-                         'client_order_ref': 'order.client_order_ref'})
-        new_id = super(stock_picking, self).create(cr, user, vals, context)
-        return new_id
+    def _prepare_order_picking(self, cr, uid, order, context=None):  
+        vals = super(sale_order, self)._prepare_order_picking(cr, uid, order, context=context)
+        vals.update({'date_expected': order.date_expected,
+                     'inv_ref': order.inv_ref,
+                     'client_order_ref': order.client_order_ref})
+        return vals
   
     def create_lpout(self, cr, uid, ids, context):
         create_lpout.create_lpout(self, cr, uid,'bigc', context)
+        
+    def get_info_from_so(self, cr, uid, ids, context):
+        # Find the Sale Order associate with the delivery order
+        for id in ids:
+            do_obj = self.browse(cr, uid, id, context=None)
+            so_obj = self.pool.get('sale.order')
+            so_id = so_obj.search(cr, uid, [('name','=',do_obj.origin)])
+            so_rec = so_obj.browse(cr, uid, so_id , context=None)
+            if len(so_rec) == 1:
+                so_date_expected = so_rec[0].date_expected
+                so_inv_ref = so_rec[0].inv_ref
+                so_client_order_ref = so_rec[0].client_order_ref
+                self.write(cr, uid, id, {'date_expected' : so_date_expected,
+                                     'inv_ref' : so_inv_ref,
+                                     'client_order_ref' : so_client_order_ref 
+                                     },context=context)
+        # WATCH OUT AND TO DO - write soem check if there is already existing values, do not overwrite it
   
 stock_picking_out
 
