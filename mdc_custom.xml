@@ -166,7 +166,7 @@
 			<form string="LP OUT File Creation Settings">
 				<field name='name' />
 				<field name='header' />
-				<field name='deliverorder' />
+				<field name='deliveryorder' />
 				<field name='doitem' />
 				<field name='material' />
 				<field name='materialdescription' />
@@ -178,7 +178,7 @@
 				<field name='shiptoparty' />
 				<field name='shiptoname' />
 				<field name='street' />
-				<field name='stree2' />
+				<field name='street2' />
 				<field name='city' />
 				<field name='postalcode' />
 				<field name='salesorder' />

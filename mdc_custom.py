@@ -156,16 +156,16 @@ class stock_picking_out(osv.osv):
         return vals
   
     def create_lpout(self, cr, uid, ids, context):
-        create_lpout.create_lpout(self, cr, uid,'bigc', context)
+        create_lpout.create_lpout(self, cr, uid, ids, 'bigc', context)
         
     def get_info_from_so(self, cr, uid, ids, context):
-        # Find the Sale Order associate with the delivery order
+        # Find the Sale Order associate with the delivery order, and then copy 3 fields from SO to DO
         for id in ids:
             do_obj = self.browse(cr, uid, id, context=None)
             so_obj = self.pool.get('sale.order')
             so_id = so_obj.search(cr, uid, [('name','=',do_obj.origin)])
             so_rec = so_obj.browse(cr, uid, so_id , context=None)
-            if len(so_rec) == 1:
+            if so_rec:
                 so_date_expected = so_rec[0].date_expected
                 so_inv_ref = so_rec[0].inv_ref
                 so_client_order_ref = so_rec[0].client_order_ref
@@ -183,7 +183,7 @@ class mdc_settings_lpout(osv.osv):
     _columns = {
     'name' : fields.char('Setting Name', size=64, required=True),
     'header' : fields.text('Column Header', required=False),
-    'deliverorder' : fields.char('Delivery Order Mapping', size=64, required=False),
+    'deliveryorder' : fields.char('Delivery Order Mapping', size=64, required=False),
     'doitem' : fields.integer('DO Item Steps', required=False),
     'material' : fields.char('Material Mapping', size=64, required=False),
     'materialdescription' : fields.char('Material Description Mapping', size=64, required=False),
@@ -195,7 +195,7 @@ class mdc_settings_lpout(osv.osv):
     'shiptoparty' : fields.char('Ship-To Party Mapping', size=64, required=False),
     'shiptoname' : fields.char('Ship-To Name Mapping', size=64, required=False),
     'street' : fields.char('Street Mapping', size=64, required=False),
-    'stree2' : fields.char('Street2 Mapping', size=64, required=False),
+    'street2' : fields.char('Street2 Mapping', size=64, required=False),
     'city' : fields.char('City Mapping', size=64, required=False),
     'postalcode' : fields.char('Postal Code Mapping', size=64, required=False),
     'salesorder' : fields.char('Sales Order Mapping', size=64, required=False),
