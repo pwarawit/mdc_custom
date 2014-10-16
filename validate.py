@@ -43,18 +43,18 @@ def validate(self, cr, uid, context):
 #     deliverydate_field = {"mdc.order.bigc":"deliverydate",
 #                        "mdc.raworder2":"deliverydate",
 #                        "mdc.raworder3":"deliverydate"}
-
-    linenum_field = {"mdc.order.bigc":"lineitemno_1",
-                       "mdc.raworder2":"lineitemno_1",
-                       "mdc.raworder3":"lineitemno_1"}
-                
-    prodqty_field = {"mdc.order.bigc":"totorder",
-                       "mdc.raworder2":"totorder",
-                       "mdc.raworder3":"totorder"}
-                
-    prodprice_field = {"mdc.order.bigc":"unitprice",
-                       "mdc.raworder2":"unitprice",
-                       "mdc.raworder3":"unitprice"}
+# 
+#     linenum_field = {"mdc.order.bigc":"lineitemno_1",
+#                        "mdc.raworder2":"lineitemno_1",
+#                        "mdc.raworder3":"lineitemno_1"}
+#                 
+#     prodqty_field = {"mdc.order.bigc":"totorder",
+#                        "mdc.raworder2":"totorder",
+#                        "mdc.raworder3":"totorder"}
+#                 
+#     prodprice_field = {"mdc.order.bigc":"unitprice",
+#                        "mdc.raworder2":"unitprice",
+#                        "mdc.raworder3":"unitprice"}
     
     timestamp = time.strftime("%d %b %Y %H:%M:%S")
     log_msg = timestamp + "\nValidate data in raw order table(" + str(self._name) + ") started...\n"
@@ -148,9 +148,9 @@ def validate(self, cr, uid, context):
                                         ordermap_rec[0].order_date,
                                         ordermap_rec[0].order_delivery_date,
                                         ordermap_rec[0].order_ref,
-                                        linenum_field[self._name],
-                                        prodqty_field[self._name],
-                                        prodprice_field[self._name]
+                                        ordermap_rec[0].order_line_num,
+                                        ordermap_rec[0].order_line_qty,
+                                        ordermap_rec[0].order_line_price
                                         ])
 
             # assume orderdate and delivery date format as for Big C
@@ -163,9 +163,9 @@ def validate(self, cr, uid, context):
                                      "mdcso_orderdate" : mdcso_orderdate,
                                      "mdcso_deliverydate" : mdcso_deliverydate,
                                      "mdcso_order_ref" : cur_rec[ordermap_rec[0].order_ref],
-                                     "mdcso_prod_linenum" : cur_rec[linenum_field[self._name]],
-                                     "mdcso_prod_qty" : int(float(cur_rec[prodqty_field[self._name]].replace(',', ''))),
-                                     "mdcso_prod_price" : float(cur_rec[prodprice_field[self._name]].replace(',', ''))
+                                     "mdcso_prod_linenum" : cur_rec[ordermap_rec[0].order_line_num],
+                                     "mdcso_prod_qty" : int(float(cur_rec[ordermap_rec[0].order_line_qty].replace(',', ''))),
+                                     "mdcso_prod_price" : float(cur_rec[ordermap_rec[0].order_line_price].replace(',', ''))
                                      } , context)
             #print curr_rec.ordermap_rec[0].order_ref
             vldn_msg = vldn_msg + "\n\n Both customer and product valided successfully. Other fields populated"
