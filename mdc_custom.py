@@ -106,6 +106,7 @@ class mdc_processlog(osv.osv):
     'process_date' : fields.datetime('Process Date', required=False),
     'log' : fields.text('Log Messages', required=False),
     }
+    _order = 'process_date desc'
 mdc_processlog
 
 class sale_order(osv.osv):
