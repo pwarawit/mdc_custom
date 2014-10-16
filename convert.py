@@ -8,14 +8,11 @@ def convert(self, cr, uid, context):
         Convert Functions - convert from raw order to Sale Order
         self = Self Model - mdc.order.bigc | mdc.order.lotus| mdc.order.robinson
     '''
-    partner_search_field = {"mdc.order.bigc":"name",
-                         "mdc.order.lotus":"name",
-                         "mdc.order.robinson":"ref"}
     
-    prod_field = {"mdc.order.bigc":"ean13",
-                  "mdc.order.lotus":"ean13",
-                  "mdc.order.robinson":"ean13"}
-    
+    # Read the order_map setting into ordermap_rec 
+    ordermap = self.pool.get('mdc.ordermap') 
+    ordermap_rec = ordermap.browse(cr, uid, ordermap.search(cr, uid, [('name','=',self._name[10:])]))
+        
     # Hardcoded default values
     pricelist_id = 1
     tax_id = [2] #Output VAT
@@ -71,7 +68,7 @@ def convert(self, cr, uid, context):
         for poline in poline_list:
             # Search product id from product table
             prod = self.pool.get('product.product')
-            prod_id = prod.search(cr, uid, [(prod_field[self._name],'=',poline["mdcso_prod_name"])])
+            prod_id = prod.search(cr, uid, [(ordermap_rec[0].key_prod,'=',poline["mdcso_prod_name"])])
             prod_name = prod.read(cr, uid, prod_id[0], ['name']) 
 
             # Construct Sale Order Line, hard coded Tax to '2' - Output vat, and add 7% into price_unit 

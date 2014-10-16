@@ -35,26 +35,6 @@ def validate(self, cr, uid, context):
     # Read the order_map setting into ordermap_rec 
     ordermap = self.pool.get('mdc.ordermap') 
     ordermap_rec = ordermap.browse(cr, uid, ordermap.search(cr, uid, [('name','=',self._name[10:])]))
-# 
-#     orderdate_field = {"mdc.order.bigc":"podate",
-#                        "mdc.raworder2":"podate",
-#                        "mdc.raworder3":"podate"}
-#     
-#     deliverydate_field = {"mdc.order.bigc":"deliverydate",
-#                        "mdc.raworder2":"deliverydate",
-#                        "mdc.raworder3":"deliverydate"}
-# 
-#     linenum_field = {"mdc.order.bigc":"lineitemno_1",
-#                        "mdc.raworder2":"lineitemno_1",
-#                        "mdc.raworder3":"lineitemno_1"}
-#                 
-#     prodqty_field = {"mdc.order.bigc":"totorder",
-#                        "mdc.raworder2":"totorder",
-#                        "mdc.raworder3":"totorder"}
-#                 
-#     prodprice_field = {"mdc.order.bigc":"unitprice",
-#                        "mdc.raworder2":"unitprice",
-#                        "mdc.raworder3":"unitprice"}
     
     timestamp = time.strftime("%d %b %Y %H:%M:%S")
     log_msg = timestamp + "\nValidate data in raw order table(" + str(self._name) + ") started...\n"
@@ -66,11 +46,12 @@ def validate(self, cr, uid, context):
     products = self.pool.get('product.product')
     prodmap = self.pool.get('mdc.prodmap')
     all_cust = partner.read(cr, uid, partner.search(cr, uid, [('customer', '=', True)]), ['id', 'name', 'ref'])
-    all_prod = products.read(cr, uid, products.search(cr, uid, [('active', '=', True)]), ['id', 'code', 'ean13', 'name.template'])
+    all_prod = products.read(cr, uid, products.search(cr, uid, [('active', '=', True)]), ['id', 'code', 'ean13', 
+                                                                                          'name.template', 'default_code'])
     all_custmap = custmap.read(cr, uid, custmap.search(cr, uid, [('srce_model', '=', self._name)]),
                                ['srce_cust_field', 'srce_cust_value', 'dest_cust_value'])
     all_prodmap = prodmap.read(cr, uid, prodmap.search(cr, uid, [('srce_model', '=', self._name)]),
-                               ['srce_prod_field', 'srce_prod_value', 'dest_prod_value'])
+                               ['srce_prod_field', 'srce_prod_value','dest_prod_field', 'dest_prod_value'])
             
     # Loop through each records on self
     for rec_id in self.search(cr, uid, []):
@@ -86,7 +67,6 @@ def validate(self, cr, uid, context):
         cust_value = self.read(cr, uid, rec_id, [ordermap_rec[0].order_cust])[ordermap_rec[0].order_cust]
         cust_ship_value = self.read(cr, uid, rec_id, [ordermap_rec[0].order_cust_ship])[ordermap_rec[0].order_cust_ship]
         cust_inv_value = self.read(cr, uid, rec_id, [ordermap_rec[0].order_cust_inv])[ordermap_rec[0].order_cust_inv]
-        prod_value = self.read(cr, uid, rec_id, [ordermap_rec[0].order_prod])[ordermap_rec[0].order_prod]
         
         custmap_result = mapcust(self, cr, uid, all_cust, all_custmap, ordermap_rec[0], cust_value)
         custmap_ship_result = mapcust(self, cr, uid, all_cust, all_custmap, ordermap_rec[0], cust_ship_value)
@@ -112,34 +92,35 @@ def validate(self, cr, uid, context):
             
         custmap_ok = custmap_result[0] and custmap_ship_result[0] and custmap_inv_result[0]
         
-        # Check with all_prod if matched
+        ''' Product Validation starts here '''
+        prod_value = self.read(cr, uid, rec_id, [ordermap_rec[0].order_prod])[ordermap_rec[0].order_prod]
+        prod_field = ordermap_rec[0].map_prod
         prodmap_ok = False
-        for prod_rec in all_prod:
-            if prodmap_ok:
-                # If the product has been found in earlier loop, then break
-                break
-            if prod_rec[ordermap_rec[0].map_prod] == prod_value:
-                vldn_msg = vldn_msg + "\nRaw Product code: " + prod_value + " macthed with " + \
-                    prod_rec[ordermap_rec[0].map_prod]
-                mdcso_prod = prod_rec[ordermap_rec[0].map_prod]
-                prodmap_ok = True
-                break
-            else:
-                # Check against all_prodmap
-                for prodmap_rec in all_prodmap:
-                    if (prodmap_rec['srce_prod_field'] == ordermap_rec[0].map_prod) and \
-                        (prodmap_rec['srce_prod_value'] == prod_value):
-                        vldn_msg = vldn_msg + "\nRaw Product Value: " + prod_value + " matched with " + \
-                            prodmap_rec['dest_prod_value'] + " via Product Mapping Table."
-                        mdcso_prod = prodmap_rec['dest_prod_value']
-                        prodmap_ok = True
-                        break
-                    else:
-                        continue
+        mdcso_prod = ''
         
-        if not prodmap_ok:
-            mdcso_prod = ""
-            vldn_msg = vldn_msg + "\n" + prod_value + " is INVALID PRODUCT VALUE!!!"
+        for prodmap_rec in all_prodmap:
+            if prodmap_rec['srce_prod_value'] == prod_value and prodmap_rec['srce_prod_field'] == prod_field:
+                # Overwrite prod_value and prod_field with data from prod_map
+                prod_field = prodmap_rec['dest_prod_field']
+                prod_value = prodmap_rec['dest_prod_value']
+                break
+        
+        match_count = 0
+        for prod_rec in all_prod:
+            if prod_rec[prod_field] == prod_value:
+                # Found the product, assign key_prod to mdcso_prod
+                mdcso_prod = prod_rec[ordermap_rec[0].key_prod]
+                prodmap_ok = True
+                match_count = match_count + 1
+        
+        if prodmap_ok and match_count == 1:
+            vldn_msg = vldn_msg + "\nRaw Product Value: " + prod_value + " matched with " + mdcso_prod
+        else:
+            if prodmap_ok and match_count > 1:
+                vldn_msg = vldn_msg + "\n There are MULTIPLE MATCHED for " + prod_value + " -- CHECK THE PRODUCT MAPPING!!!"
+                prodmap_ok = False
+            else:  
+                vldn_msg = vldn_msg + "\n" + prod_value + " is INVALID PRODUCT VALUE!!!"
         
         if custmap_ok and prodmap_ok:
             mdcvld_ok = True
@@ -233,7 +214,7 @@ def validate(self, cr, uid, context):
     # Construct list of invalid products
     invalid_prod_list = set()
     for rec in self.search(cr, uid, [('mdcvld_prodmap_ok','=',False)]):
-        prod_value = self.read(cr, uid, rec, [prod_field[self._name]])[prod_field[self._name]]
+        prod_value = self.read(cr, uid, rec, [ordermap_rec[0].order_prod])[ordermap_rec[0].order_prod]
         if prod_value not in invalid_prod_list:        
             invalid_prod_list.add(prod_value)
 

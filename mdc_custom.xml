@@ -118,6 +118,7 @@
 					<field name='srce_model' />
 					<field name='srce_prod_field' />
 					<field name='srce_prod_value' />
+					<field name='dest_prod_field'/>
 					<field name='dest_prod_value' />
 				</tree>
 			</field>
@@ -130,6 +131,7 @@
 					<field name='srce_model' />
 					<field name='srce_prod_field' />
 					<field name='srce_prod_value' />
+					<field name='dest_prod_field'/>
 					<field name='dest_prod_value' />
 				</form>
 			</field>

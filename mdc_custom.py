@@ -79,10 +79,10 @@ class mdc_custmap(osv.osv):
     _name = 'mdc.custmap'
     _description = 'MDC Customer Mapping'
     _columns = {
-    'srce_model' : fields.char('Source Model', size=32, required=True),
-    'srce_cust_field' : fields.char('Source Customer Field', size=32, required=True),
-    'srce_cust_value' : fields.char('Source Customer Value', size=256, required=True),
-    'dest_cust_value' : fields.char('Destination Customer Value', size=256, required=True),
+    'srce_model' : fields.char('Source Model', size=32, required=False),
+    'srce_cust_field' : fields.char('Source Customer Field', size=32, required=False),
+    'srce_cust_value' : fields.char('Source Customer Value', size=256, required=False),
+    'dest_cust_value' : fields.char('Destination Customer Value', size=256, required=False),
     }
 mdc_custmap
 
@@ -90,10 +90,11 @@ class mdc_prodmap(osv.osv):
     _name = 'mdc.prodmap'
     _description = 'MDC Product Mapping'
     _columns = {
-    'srce_model' : fields.char('Source Model', size=32, required=True),
-    'srce_prod_field' : fields.char('Source Product Field', size=32, required=True),
-    'srce_prod_value' : fields.char('Source Product Value', size=256, required=True),
-    'dest_prod_value' : fields.char('Destination Product Value', size=256, required=True),
+    'srce_model' : fields.char('Source Model', size=32, required=False),
+    'srce_prod_field' : fields.char('Source Product Field', size=32, required=False),
+    'srce_prod_value' : fields.char('Source Product Value', size=256, required=False),
+    'dest_prod_field' : fields.char('Destination Product Field', size=256, required=False),
+    'dest_prod_value' : fields.char('Destination Product Value', size=256, required=False),
     }
 mdc_prodmap
 
