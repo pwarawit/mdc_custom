@@ -4,3 +4,4 @@ access_mdc_custmap,mdc.custmap,model_mdc_custmap,group_mdc_user,1,1,1,1
 access_mdc_prodmap,mdc.prodmap,model_mdc_prodmap,group_mdc_user,1,1,1,1
 access_mdc_processlog,mdc.processlog,model_mdc_processlog,group_mdc_user,1,1,1,1
 access_mdc_settings_lpout,mdc.settings.lpout,model_mdc_settings_lpout,group_mdc_user,1,1,1,1
+access_mdc_ordermap,mdc.ordermap,model_mdc_ordermap,group_mdc_user,1,1,1,1

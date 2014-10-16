@@ -158,34 +158,63 @@
 				</form>
 			</field>
 		</record>
-		
-	<record id="mdc_settings_lpout_form" model="ir.ui.view">
-		<field name="name">mdc.settings.lpout.form</field>
-		<field name="model">mdc.settings.lpout</field>
-		<field name="arch" type="xml">
-			<form string="LP OUT File Creation Settings">
-				<field name='name' />
-				<field name='header' />
-				<field name='deliveryorder' />
-				<field name='doitem' />
-				<field name='material' />
-				<field name='materialdescription' />
-				<field name='salesunit' />
-				<field name='dateformat' />
-				<field name='timeformat' />
-				<field name='deliveryorderdate' />
-				<field name='createdby' />
-				<field name='shiptoparty' />
-				<field name='shiptoname' />
-				<field name='street' />
-				<field name='street2' />
-				<field name='city' />
-				<field name='postalcode' />
-				<field name='salesorder' />
-				<field name='salesorderitem' />
-			</form>
-		</field>
-	</record>
+		<record id="mdc_ordermap_form" model="ir.ui.view">
+			<field name="name">mdc.ordermap.form</field>
+			<field name="model">mdc.ordermap</field>
+			<field name="arch" type="xml">
+				<form string="Order File Mapping Setting">
+					<field name='name' />
+					<field name='order_cust' />
+					<field name='order_cust_ship' />
+					<field name='order_cust_inv' />
+					<field name='order_prod' />
+					<field name='order_date' />
+					<field name='order_delivery_date' />
+					<field name='order_ref' />
+					<field name='order_line_num' />
+					<field name='order_line_qty' />
+					<field name='order_line_price' />
+					<field name='order_line_amt' />
+					<field name='order_total_amt' />
+					<field name='map_cust' />
+					<field name='map_cust_ship' />
+					<field name='map_cust_inv' />
+					<field name='map_prod' />
+					<field name='key_cust' />
+					<field name='key_cust_ship' />
+					<field name='key_cust_inv' />
+					<field name='key_prod' />
+				</form>
+			</field>
+		</record>
+
+		<record id="mdc_settings_lpout_form" model="ir.ui.view">
+			<field name="name">mdc.settings.lpout.form</field>
+			<field name="model">mdc.settings.lpout</field>
+			<field name="arch" type="xml">
+				<form string="LP OUT File Creation Settings">
+					<field name='name' />
+					<field name='header' />
+					<field name='deliveryorder' />
+					<field name='doitem' />
+					<field name='material' />
+					<field name='materialdescription' />
+					<field name='salesunit' />
+					<field name='dateformat' />
+					<field name='timeformat' />
+					<field name='deliveryorderdate' />
+					<field name='createdby' />
+					<field name='shiptoparty' />
+					<field name='shiptoname' />
+					<field name='street' />
+					<field name='street2' />
+					<field name='city' />
+					<field name='postalcode' />
+					<field name='salesorder' />
+					<field name='salesorderitem' />
+				</form>
+			</field>
+		</record>
 
 		<record id="view_order_form_ext" model="ir.ui.view">
 			<field name="name">view.order.form.ext</field>
@@ -200,19 +229,19 @@
 			</field>
 		</record>
 
-        <record id="view_stock_picking_out_form_ext" model="ir.ui.view">
-            <field name="name">view.stock.picking.out.ext</field>
-            <field name="model">stock.picking.out</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="stock.view_picking_out_form" />
-            <field name="arch" type="xml">
-                <field name="min_date" position="after">
-                    <field name='date_expected' />
-                    <field name='inv_ref' />
-                    <field name='client_order_ref' />
-                </field>
-            </field>
-        </record>
+		<record id="view_stock_picking_out_form_ext" model="ir.ui.view">
+			<field name="name">view.stock.picking.out.ext</field>
+			<field name="model">stock.picking.out</field>
+			<field name="type">form</field>
+			<field name="inherit_id" ref="stock.view_picking_out_form" />
+			<field name="arch" type="xml">
+				<field name="min_date" position="after">
+					<field name='date_expected' />
+					<field name='inv_ref' />
+					<field name='client_order_ref' />
+				</field>
+			</field>
+		</record>
 
 		<!-- Action Definitions -->
 		<record model="ir.actions.act_window" id="action_mdc_order_bigc">
@@ -255,14 +284,21 @@
 			<field name="domain">[('customer','=',True)]</field>
 			<field name="context">{}</field>
 		</record>
-        <record model="ir.actions.act_window" id="action_mdc_settings_lpout">
-            <field name="name">LP OUT Creation Settings</field>
-            <field name="res_model">mdc.settings.lpout</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[]</field>
-            <field name="context">{}</field>
-        </record>		
+		<record model="ir.actions.act_window" id="action_mdc_ordermap">
+			<field name="name">MDC Order Mapping</field>
+			<field name="res_model">mdc.ordermap</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="context">{}</field>
+		</record>
+		<record model="ir.actions.act_window" id="action_mdc_settings_lpout">
+			<field name="name">LP OUT Creation Settings</field>
+			<field name="res_model">mdc.settings.lpout</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[]</field>
+			<field name="context">{}</field>
+		</record>
 
 		<!-- Menu Definitions -->
 		<menuitem id="mdc_menu_main" name="ModernCare" action="sale.action_quotations"
@@ -283,9 +319,6 @@
 			action="action_mdc_customer" sequence="3010" parent="mdc_menu_masterdata" />
 		<menuitem id="mdc_menu_masterdata_products" name="Products"
 			action="product.product_normal_action" sequence="3020" parent="mdc_menu_masterdata" />
-		<menuitem id="mdc_menu_masterdata_productscategory" name="Products by Category"
-			action="product.product_category_action" sequence="3030"
-			parent="mdc_menu_masterdata" />
 		<menuitem id="mdc_menu_batchorders" name="Batch Orders"
 			action="action_mdc_order_bigc" sequence="40" parent="mdc_menu_main" />
 		<menuitem id="mdc_menu_order_bigc" name="Big C Orders"
@@ -304,8 +337,10 @@
 			action="action_mdc_custmap" sequence="5010" parent="mdc_menu_config" />
 		<menuitem id="mdc_menu_prodmap" name="Product Mapping"
 			action="action_mdc_prodmap" sequence="5020" parent="mdc_menu_config" />
-        <menuitem id="mdc_menu_settingslpout" name="LP OUT File Settings"
-            action="action_mdc_settings_lpout" sequence="5030" parent="mdc_menu_config" />
+		<menuitem id="mdc_menu_ordermap" name="Order Mapping"
+			action="action_mdc_ordermap" sequence="5030" parent="mdc_menu_config" />
+		<menuitem id="mdc_menu_settingslpout" name="LP OUT File Settings"
+			action="action_mdc_settings_lpout" sequence="5040" parent="mdc_menu_config" />
 
 		<!-- Server Action Definitions -->
 		<record model="ir.actions.server" id="action_mdc_order_bigc_validate">
@@ -333,30 +368,30 @@
 			<field name="condition">True</field>
 			<field name="name">Convert</field>
 		</record>
-        <record model="ir.actions.server" id="action_mdc_get_info_from_so">
-            <field name="sequence" eval="5" />
-            <field name="state">code</field>
-            <field name="type">ir.actions.server</field>
-            <field name="model_id" search="[('model','=','stock.picking.out')]" />
-            <field name="code">
-                action = self.get_info_from_so(cr, uid,
-                context.get('active_ids'), context)
-            </field>
-            <field name="condition">True</field>
-            <field name="name">Get info from Sales Order</field>
-        </record>		
-        <record model="ir.actions.server" id="action_mdc_create_lpout">
-            <field name="sequence" eval="5" />
-            <field name="state">code</field>
-            <field name="type">ir.actions.server</field>
-            <field name="model_id" search="[('model','=','stock.picking.out')]" />
-            <field name="code">
-                action = self.create_lpout(cr, uid,
-                context.get('active_ids'), context)
-            </field>
-            <field name="condition">True</field>
-            <field name="name">Create LP OUT File</field>
-        </record>
+		<record model="ir.actions.server" id="action_mdc_get_info_from_so">
+			<field name="sequence" eval="5" />
+			<field name="state">code</field>
+			<field name="type">ir.actions.server</field>
+			<field name="model_id" search="[('model','=','stock.picking.out')]" />
+			<field name="code">
+				action = self.get_info_from_so(cr, uid,
+				context.get('active_ids'), context)
+			</field>
+			<field name="condition">True</field>
+			<field name="name">Get info from Sales Order</field>
+		</record>
+		<record model="ir.actions.server" id="action_mdc_create_lpout">
+			<field name="sequence" eval="5" />
+			<field name="state">code</field>
+			<field name="type">ir.actions.server</field>
+			<field name="model_id" search="[('model','=','stock.picking.out')]" />
+			<field name="code">
+				action = self.create_lpout(cr, uid,
+				context.get('active_ids'), context)
+			</field>
+			<field name="condition">True</field>
+			<field name="name">Create LP OUT File</field>
+		</record>
 
 
 		<!-- Server Action Binding -->
@@ -377,21 +412,21 @@
 				eval="'ir.actions.server,' + str(ref('action_mdc_order_bigc_convert'))" />
 		</record>
 		<record model="ir.values" id="ir_mdc_get_info_from_so">
-            <field name="key">action</field>
-            <field name="key2">client_action_multi</field>
-            <field name="model">stock.picking.out</field>
-            <field name="name">Get info from Sales Order</field>
-            <field name="value"
-                eval="'ir.actions.server,' + str(ref('action_mdc_create_lpout'))" />
-        </record>
-        <record model="ir.values" id="ir_mdc_create_lpout">
-            <field name="key">action</field>
-            <field name="key2">client_action_multi</field>
-            <field name="model">stock.picking.out</field>
-            <field name="name">Create LP OUT file</field>
-            <field name="value"
-                eval="'ir.actions.server,' + str(ref('action_mdc_get_info_from_so'))" />
-        </record>
+			<field name="key">action</field>
+			<field name="key2">client_action_multi</field>
+			<field name="model">stock.picking.out</field>
+			<field name="name">Get info from Sales Order</field>
+			<field name="value"
+				eval="'ir.actions.server,' + str(ref('action_mdc_create_lpout'))" />
+		</record>
+		<record model="ir.values" id="ir_mdc_create_lpout">
+			<field name="key">action</field>
+			<field name="key2">client_action_multi</field>
+			<field name="model">stock.picking.out</field>
+			<field name="name">Create LP OUT file</field>
+			<field name="value"
+				eval="'ir.actions.server,' + str(ref('action_mdc_get_info_from_so'))" />
+		</record>
 	</data>
 
 </openerp>

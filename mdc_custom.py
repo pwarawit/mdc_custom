@@ -211,4 +211,34 @@ class mdc_settings_lpout(osv.osv):
 
 mdc_settings_lpout
 
+class mdc_ordermap(osv.osv):
+    _name = 'mdc.ordermap'
+    _description = 'MDC Raw Order Mapping'
+    _columns = {
+    'name' : fields.char('Mapping Name', size=64, required=True),
+    'order_cust' : fields.char('Customer field in raw order', size=64, required=False),
+    'order_cust_ship' : fields.char('Customer Shipping filed in raw order', size=64, required=False),
+    'order_cust_inv' : fields.char('Customer Invoice field in raw order', size=64, required=False),
+    'order_prod' : fields.char('Product field in raw order', size=64, required=False),
+    'order_date' : fields.char('Order date field in raw order', size=64, required=False),
+    'order_delivery_date' : fields.char('Delivery date field in raw order', size=64, required=False),
+    'order_ref' : fields.char('Reference (PO Number) field', size=64, required=False),
+    'order_line_num' : fields.char('Line number field ', size=64, required=False),
+    'order_line_qty' : fields.char('Line quantity field', size=64, required=False),
+    'order_line_price' : fields.char('Line product price field', size=64, required=False),
+    'order_line_amt' : fields.char('Line amount field ', size=64, required=False),
+    'order_total_amt' : fields.char('Total order amount field', size=64, required=False),
+    'map_cust' : fields.char('Customer Map field', size=64, required=False),
+    'map_cust_ship' : fields.char('Customer Shipping Map field', size=64, required=False),
+    'map_cust_inv' : fields.char('Customer Invoice Map field', size=64, required=False),
+    'map_prod' : fields.char('Product Map field', size=64, required=False),
+    'key_cust' : fields.char('Key Customer field', size=64, required=False),
+    'key_cust_ship' : fields.char('Key Customer Shipping field', size=64, required=False),
+    'key_cust_inv' : fields.char('Key Customer Invoice field', size=64, required=False),
+    'key_prod' : fields.char('Key Product field', size=64, required=False),
+    }
+    _order = 'name'
+
+mdc_ordermap
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4
