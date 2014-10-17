@@ -19,24 +19,25 @@
 #
 ##############################################################################
 
-{
-    'name': 'ModernCare Customization',
-    'version': '1.0',
-    'category': 'Customization',
-    'summary': 'Customization Module for ModernCare Co.,Ltd.', 
-    'description': """
-    This module contains all the customization for ModernCare company. 
-    """,
-    'author': 'InfoMobius Co.,Ltd',
-    'depends': ['sale', 'stock'],
-    'data': ['mdc_custom.xml',
-             'sale_view.xml',
-             'security/mdc_custom_security.xml',
-             'security/ir.model.access.csv',
-             'wizard/mdc_lpout.xml'],
-    'demo': [],
-    'test': [],
-    'installable': True,
-    'auto_install': False,
-}
+from openerp.osv import fields, osv
+import openerp.addons.decimal_precision as dp
+
+
+class sale_order_line(osv.osv):
+
+    _inherit = 'sale.order.line'
+    _columns = {
+        'discount_amount': fields.float('Discount Amount', digits_compute=dp.get_precision('Discount'), readonly=True, states={'draft': [('readonly', False)]}),
+        'discount': fields.float('Discount (%)', digits=(16, 12), readonly=True, states={'draft': [('readonly', False)]}),
+    }
+
+    def onchange_discount_amount(self, cr, uid, ids, discount_amount, price_unit, context=None):
+        val = {'discount': 0.0}
+        if price_unit:
+            discount = float(discount_amount) / float(price_unit) * 100
+            val['discount'] = discount
+        return {'value': val}
+
+sale_order_line()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -23,6 +23,8 @@ import validate
 import convert
 import mdc_custom
 import wizard
+import sale
+import account_invoice
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

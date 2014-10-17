@@ -19,24 +19,16 @@
 #
 ##############################################################################
 
-{
-    'name': 'ModernCare Customization',
-    'version': '1.0',
-    'category': 'Customization',
-    'summary': 'Customization Module for ModernCare Co.,Ltd.', 
-    'description': """
-    This module contains all the customization for ModernCare company. 
-    """,
-    'author': 'InfoMobius Co.,Ltd',
-    'depends': ['sale', 'stock'],
-    'data': ['mdc_custom.xml',
-             'sale_view.xml',
-             'security/mdc_custom_security.xml',
-             'security/ir.model.access.csv',
-             'wizard/mdc_lpout.xml'],
-    'demo': [],
-    'test': [],
-    'installable': True,
-    'auto_install': False,
-}
+from openerp.osv import fields, osv
+
+
+class account_invoice_line(osv.osv):
+
+    _inherit = 'account.invoice.line'
+    _columns = {
+        'discount': fields.float('Discount (%)', digits=(16, 12)),
+    }
+
+account_invoice_line()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

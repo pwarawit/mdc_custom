@@ -118,7 +118,7 @@
 					<field name='srce_model' />
 					<field name='srce_prod_field' />
 					<field name='srce_prod_value' />
-					<field name='dest_prod_field'/>
+					<field name='dest_prod_field' />
 					<field name='dest_prod_value' />
 				</tree>
 			</field>
@@ -131,7 +131,7 @@
 					<field name='srce_model' />
 					<field name='srce_prod_field' />
 					<field name='srce_prod_value' />
-					<field name='dest_prod_field'/>
+					<field name='dest_prod_field' />
 					<field name='dest_prod_value' />
 				</form>
 			</field>
@@ -228,6 +228,20 @@
 					<field name='date_expected' />
 					<field name='inv_ref' />
 				</field>
+<!-- 				
+				<notebook>
+					<page string="Order Lines">
+						<field name="order_line">
+-->						
+							<tree string="Sales Order Lines" editable="bottom">
+								<field name="tax_id" invisible="1" widget="many2many_tags"
+									domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]" />
+							</tree>
+<!--                
+						</field>
+					</page>
+				</notebook>
+ -->
 			</field>
 		</record>
 
@@ -339,8 +353,8 @@
 			action="action_mdc_custmap" sequence="5010" parent="mdc_menu_config" />
 		<menuitem id="mdc_menu_prodmap" name="Product Mapping"
 			action="action_mdc_prodmap" sequence="5020" parent="mdc_menu_config" />
-		<menuitem id="mdc_menu_ordermap" name="Order Mapping"
-			action="action_mdc_ordermap" sequence="5030" parent="mdc_menu_config" />
+		<menuitem id="mdc_menu_ordermap" name="Order Mapping" action="action_mdc_ordermap"
+			sequence="5030" parent="mdc_menu_config" />
 		<menuitem id="mdc_menu_settingslpout" name="LP OUT File Settings"
 			action="action_mdc_settings_lpout" sequence="5040" parent="mdc_menu_config" />
 
