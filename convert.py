@@ -46,6 +46,9 @@ def convert(self, cr, uid, context):
         # Search customer for mdcso_customer name
         partner = self.pool.get('res.partner')
         partner_id = partner.search(cr, uid, [('name','=',poline_list[0]["mdcso_customer"])])
+        
+        # Get default salesperson (user_id) from res.partner
+        salesperson = partner.read(cr, uid, partner_id,['user_id'])[0]['user_id']
 
         # Construct so_value, dictionary that contains Sales Order value
         so_value = {"partner_id" : partner_id[0],
@@ -55,7 +58,9 @@ def convert(self, cr, uid, context):
                     "state" : "draft",
                     "client_order_ref" : poline_list[0]["mdcso_order_ref"],
                     "date_order" : poline_list[0]["mdcso_orderdate"],
-                    "date_expected" : poline_list[0]["mdcso_deliverydate"]}
+                    "date_expected" : poline_list[0]["mdcso_deliverydate"],
+                    "user_id" : salesperson[0]
+                    }
         
         # log_msg = log_msg + "\n" + str(so_value) + "\n"        
         log_msg = log_msg + "\n  PO: " + po_rec + " contains " + str(len(poline_list)) + " lines."
