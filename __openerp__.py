@@ -21,7 +21,7 @@
 
 {
     'name': 'ModernCare Customization',
-    'version': '1.0',
+    'version': '0.1',
     'category': 'Customization',
     'summary': 'Customization Module for ModernCare Co.,Ltd.', 
     'description': """
