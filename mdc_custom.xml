@@ -328,7 +328,9 @@
 		<menuitem id="mdc_menu_warehouse" name="Warehouse"
 			action="sale.action_quotations" sequence="20" parent="mdc_menu_main" />
 		<menuitem id="mdc_menu_warehouse_delivery" name="Delivery Orders"
-			action="stock.action_picking_tree" sequence="2010" parent="mdc_menu_warehouse" />
+			action="stock.action_picking_tree" sequence="2010" parent="mdc_menu_warehouse" /> 					
+        <menuitem id="mdc_menu_warehouse_inventory" name="Physical Inventories"
+            action="stock.action_inventory_form" sequence="2020" parent="mdc_menu_warehouse" />         
 		<menuitem id="mdc_menu_masterdata" name="Master Data"
 			action="sale.action_quotations" sequence="30" parent="mdc_menu_main" />
 		<menuitem id="mdc_menu_masterdata_customer" name="Customers"
