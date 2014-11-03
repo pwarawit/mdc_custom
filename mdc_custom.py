@@ -116,12 +116,23 @@ class sale_order(osv.osv):
     
     _columns = {
         'date_expected': fields.date('Expected Delivery Date', required=False, readonly=False),
-        'inv_ref' : fields.char('Ref.Invoice No', size=64)
+        'inv_ref' : fields.char('Ref.Invoice No', size=64),
+        'delivery_zone': fields.selection([
+        ('bangkok', 'Bangkok'),
+        ('greater_bangkok', 'Greater Bangkok'),
+        ('upcountry', 'Upcountry')],"Delivery Zone")        
         }
     _defaults = {
         'date_expected': lambda *a: datetime.datetime.now().strftime('%Y-%m-%d'),
         }
     
+    def onchange_partner_id(self, cr, uid, ids, part, context=None):
+        res = super(sale_order, self).onchange_partner_id(cr, uid, ids, part, context)
+        part = self.pool.get('res.partner').browse(cr, uid, part, context=context)
+        res['value'].update({'delivery_zone':part.delivery_zone})
+        return res        
+        
+        
     def _get_date_planned(self, cr, uid, order, line, start_date, context=None):
         # Overwrite with this date
         return order.date_expected
@@ -136,9 +147,23 @@ class stock_picking(osv.osv):
         'date_expected': fields.date('Expected Delivery Date', required=False, readonly=False),
         'inv_ref' : fields.char('Ref.Invoice No', size=64),
         'client_order_ref': fields.char('Customer Reference', size=64),
+        'delivery_zone': fields.selection([
+        ('bangkok', 'Bangkok'),
+        ('greater_bangkok', 'Greater Bangkok'),
+        ('upcountry', 'Upcountry')],"Delivery Zone")        
     }
     
 stock_picking
+
+class res_partner(osv.osv):
+    _inherit = 'res.partner'
+    _columns = {
+            'delivery_zone': fields.selection([
+            ('bangkok', 'Bangkok'),
+            ('greater_bangkok', 'Greater Bangkok'),
+            ('upcountry', 'Upcountry')],"Delivery Zone")
+    }
+res_partner
 
 class stock_picking_out(osv.osv):
   

@@ -218,33 +218,6 @@
 			</field>
 		</record>
 
-		<record id="view_order_form_ext" model="ir.ui.view">
-			<field name="name">view.order.form.ext</field>
-			<field name="model">sale.order</field>
-			<field name="type">form</field>
-			<field name="inherit_id" ref="sale.view_order_form" />
-			<field name="arch" type="xml">
-				<field name="date_order" position="after">
-					<field name='date_expected' />
-					<field name='inv_ref' />
-				</field>
-<!-- 				
-				<notebook>
-					<page string="Order Lines">
-						<field name="order_line">
--->						
-							<tree string="Sales Order Lines" editable="bottom">
-								<field name="tax_id" invisible="1" widget="many2many_tags"
-									domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]" />
-							</tree>
-<!--                
-						</field>
-					</page>
-				</notebook>
- -->
-			</field>
-		</record>
-
 		<record id="view_stock_picking_out_form_ext" model="ir.ui.view">
 			<field name="name">view.stock.picking.out.ext</field>
 			<field name="model">stock.picking.out</field>
@@ -328,9 +301,9 @@
 		<menuitem id="mdc_menu_warehouse" name="Warehouse"
 			action="sale.action_quotations" sequence="20" parent="mdc_menu_main" />
 		<menuitem id="mdc_menu_warehouse_delivery" name="Delivery Orders"
-			action="stock.action_picking_tree" sequence="2010" parent="mdc_menu_warehouse" /> 					
-        <menuitem id="mdc_menu_warehouse_inventory" name="Physical Inventories"
-            action="stock.action_inventory_form" sequence="2020" parent="mdc_menu_warehouse" />         
+			action="stock.action_picking_tree" sequence="2010" parent="mdc_menu_warehouse" />
+		<menuitem id="mdc_menu_warehouse_inventory" name="Physical Inventories"
+			action="stock.action_inventory_form" sequence="2020" parent="mdc_menu_warehouse" />
 		<menuitem id="mdc_menu_masterdata" name="Master Data"
 			action="sale.action_quotations" sequence="30" parent="mdc_menu_main" />
 		<menuitem id="mdc_menu_masterdata_customer" name="Customers"
@@ -445,8 +418,43 @@
 			<field name="value"
 				eval="'ir.actions.server,' + str(ref('action_mdc_get_info_from_so'))" />
 		</record>
-	</data>
 
+
+		<!-- Additional Search View -->
+		<record id="mdc_view_sales_order_filter" model="ir.ui.view">
+			<field name="name">mdc.sale.order.list.select</field>
+			<field name="model">sale.order</field>
+			<field name="inherit_id" ref="sale.view_sales_order_filter" />
+			<field name="arch" type="xml">
+				<search string="Search Sales Order">
+					<field name="inv_ref" />
+					<group expand="0" string="Group By...">
+						<filter string="Invoice Reference" icon="terp-go-month"
+							domain="[]" context="{'group_by':'inv_ref'}" />
+					</group>
+				</search>
+				<!-- <search string="Search Sales Order"> <field name="name" string="Sales 
+					Order" filter_domain="['|',('name','ilike',self),('client_order_ref','ilike',self)]" 
+					/> <filter icon="terp-mail-message-new" string="Unread Messages" name="message_unread" 
+					domain="[('message_unread','=',True)]" /> <separator /> <filter icon="terp-document-new" 
+					string="Quotations" name="draft" domain="[('state','in',('draft','sent'))]" 
+					help="Sales Order that haven't yet been confirmed" /> <filter icon="terp-check" 
+					string="Sales" name="sales" domain="[('state','in',('manual','progress'))]" 
+					/> <filter icon="terp-dolar_ok!" string="To Invoice" domain="[('state','=','manual')]" 
+					help="Sales Order ready to be invoiced" /> <filter icon="terp-dolar_ok!" 
+					string="Done" domain="[('state','=','done')]" help="Sales Order done" /> 
+					<separator /> <filter string="My Sales Orders" domain="[('user_id','=',uid)]" 
+					help="My Sales Orders" icon="terp-personal" name="my_sale_orders_filter" 
+					/> <field name="partner_id" operator="child_of" /> <field name="user_id" 
+					/> <field name="project_id" /> <group expand="0" string="Group By..."> <filter 
+					string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}" 
+					/> <filter string="Salesperson" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}" 
+					/> <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" 
+					context="{'group_by':'state'}" /> <filter string="Order DateXXX" icon="terp-go-month" 
+					domain="[]" context="{'group_by':'date_order'}" /> </group> </search> -->
+			</field>
+		</record>
+	</data>
 </openerp>
 
 
