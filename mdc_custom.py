@@ -110,7 +110,7 @@ class mdc_processlog(osv.osv):
     _order = 'process_date desc'
 mdc_processlog
 
-class sale_order(osv.osv):
+class sale_order(osv.Model):
     
     _inherit = "sale.order"
     
@@ -132,7 +132,14 @@ class sale_order(osv.osv):
         res['value'].update({'delivery_zone':part.delivery_zone})
         return res        
         
-        
+    def _prepare_order_picking(self, cr, uid, order, context=None): 
+        raise osv.except_osv(_('Invalid Action!'), _('Just for DEBUGGING!!!')) 
+        vals = super(sale_order, self)._prepare_order_picking(cr, uid, order, context=context)
+        vals.update({'date_expected': order.date_expected,
+                     'inv_ref': order.inv_ref,
+                     'client_order_ref': order.client_order_ref})
+        return vals
+            
     def _get_date_planned(self, cr, uid, order, line, start_date, context=None):
         # Overwrite with this date
         return order.date_expected
@@ -174,13 +181,7 @@ class stock_picking_out(osv.osv):
         'inv_ref' : fields.char('Ref.Invoice No', size=64),
         'client_order_ref': fields.char('Customer Reference', size=64),
     }
-    
-    def _prepare_order_picking(self, cr, uid, order, context=None):  
-        vals = super(sale_order, self)._prepare_order_picking(cr, uid, order, context=context)
-        vals.update({'date_expected': order.date_expected,
-                     'inv_ref': order.inv_ref,
-                     'client_order_ref': order.client_order_ref})
-        return vals
+
   
     def create_lpout(self, cr, uid, ids, context):
         create_lpout.create_lpout(self, cr, uid, ids, 'bigc', context)

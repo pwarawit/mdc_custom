@@ -288,7 +288,23 @@
 			<field name="domain">[]</field>
 			<field name="context">{}</field>
 		</record>
-
+        <record model="ir.actions.act_window" id="action_mdc_saleorderline">
+            <field name="name">Sales Order by Line</field>
+            <field name="res_model">sale.order.line</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+        <record model="ir.actions.act_window" id="action_mdc_stockinventory">
+            <field name="name">Stock Inventory</field>
+            <field name="res_model">report.stock.inventory</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>        
+        
 		<!-- Menu Definitions -->
 		<menuitem id="mdc_menu_main" name="ModernCare" action="sale.action_quotations"
 			sequence="1" />
@@ -322,16 +338,20 @@
 			action="action_mdc_processlog_vld" sequence="4040" parent="mdc_menu_batchorders" />
 		<menuitem id="mdc_menu_reports" name="Reports" action="action_mdc_order_bigc"
 			sequence="50" parent="mdc_menu_main" />
+		<menuitem id="mdc_menu_rep_saleorderline" name="Sales Order Lines"
+            action="action_mdc_saleorderline" sequence="5010" parent="mdc_menu_reports" />	
+        <menuitem id="mdc_menu_rep_stockinventory" name="Product Stocks"
+            action="action_mdc_stockinventory" sequence="5020" parent="mdc_menu_reports" />              
 		<menuitem id="mdc_menu_config" name="Configurations" action="action_mdc_order_bigc"
-			sequence="50" parent="mdc_menu_main" />
+			sequence="60" parent="mdc_menu_main" />
 		<menuitem id="mdc_menu_custmap" name="Customer Mapping"
-			action="action_mdc_custmap" sequence="5010" parent="mdc_menu_config" />
+			action="action_mdc_custmap" sequence="6010" parent="mdc_menu_config" />
 		<menuitem id="mdc_menu_prodmap" name="Product Mapping"
-			action="action_mdc_prodmap" sequence="5020" parent="mdc_menu_config" />
+			action="action_mdc_prodmap" sequence="6020" parent="mdc_menu_config" />
 		<menuitem id="mdc_menu_ordermap" name="Order Mapping" action="action_mdc_ordermap"
-			sequence="5030" parent="mdc_menu_config" />
+			sequence="6030" parent="mdc_menu_config" />
 		<menuitem id="mdc_menu_settingslpout" name="LP OUT File Settings"
-			action="action_mdc_settings_lpout" sequence="5040" parent="mdc_menu_config" />
+			action="action_mdc_settings_lpout" sequence="6040" parent="mdc_menu_config" />
 
 		<!-- Server Action Definitions -->
 		<record model="ir.actions.server" id="action_mdc_order_bigc_validate">

@@ -49,6 +49,7 @@ def convert(self, cr, uid, context):
         
         # Get default salesperson (user_id) from res.partner
         salesperson = partner.read(cr, uid, partner_id,['user_id'])[0]['user_id']
+        delivery_zone = partner.read(cr, uid, partner_id,['delivery_zone'])[0]['delivery_zone']
 
         # Construct so_value, dictionary that contains Sales Order value
         so_value = {"partner_id" : partner_id[0],
@@ -59,7 +60,8 @@ def convert(self, cr, uid, context):
                     "client_order_ref" : poline_list[0]["mdcso_order_ref"],
                     "date_order" : poline_list[0]["mdcso_orderdate"],
                     "date_expected" : poline_list[0]["mdcso_deliverydate"],
-                    "user_id" : salesperson[0]
+                    "user_id" : salesperson[0],
+                    "delivery_zone" : delivery_zone,
                     }
         
         # log_msg = log_msg + "\n" + str(so_value) + "\n"        
