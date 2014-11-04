@@ -228,6 +228,7 @@
 					<field name='date_expected' />
 					<field name='inv_ref' />
 					<field name='client_order_ref' />
+					<field name='delivery_zone' />
 				</field>
 			</field>
 		</record>
@@ -288,23 +289,23 @@
 			<field name="domain">[]</field>
 			<field name="context">{}</field>
 		</record>
-        <record model="ir.actions.act_window" id="action_mdc_saleorderline">
-            <field name="name">Sales Order by Line</field>
-            <field name="res_model">sale.order.line</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[]</field>
-            <field name="context">{}</field>
-        </record>
-        <record model="ir.actions.act_window" id="action_mdc_stockinventory">
-            <field name="name">Stock Inventory</field>
-            <field name="res_model">report.stock.inventory</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[]</field>
-            <field name="context">{}</field>
-        </record>        
-        
+		<record model="ir.actions.act_window" id="action_mdc_saleorderline">
+			<field name="name">Sales Order by Line</field>
+			<field name="res_model">sale.order.line</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[]</field>
+			<field name="context">{}</field>
+		</record>
+		<record model="ir.actions.act_window" id="action_mdc_stockinventory">
+			<field name="name">Stock Inventory</field>
+			<field name="res_model">report.stock.inventory</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('location_type','=','internal')]</field>
+			<field name="context">{'group_by':['location_id','product_id']}</field>
+		</record>
+
 		<!-- Menu Definitions -->
 		<menuitem id="mdc_menu_main" name="ModernCare" action="sale.action_quotations"
 			sequence="1" />
@@ -339,9 +340,9 @@
 		<menuitem id="mdc_menu_reports" name="Reports" action="action_mdc_order_bigc"
 			sequence="50" parent="mdc_menu_main" />
 		<menuitem id="mdc_menu_rep_saleorderline" name="Sales Order Lines"
-            action="action_mdc_saleorderline" sequence="5010" parent="mdc_menu_reports" />	
-        <menuitem id="mdc_menu_rep_stockinventory" name="Product Stocks"
-            action="action_mdc_stockinventory" sequence="5020" parent="mdc_menu_reports" />              
+			action="action_mdc_saleorderline" sequence="5010" parent="mdc_menu_reports" />
+		<menuitem id="mdc_menu_rep_stockinventory" name="Product Stocks"
+			action="action_mdc_stockinventory" sequence="5020" parent="mdc_menu_reports" />
 		<menuitem id="mdc_menu_config" name="Configurations" action="action_mdc_order_bigc"
 			sequence="60" parent="mdc_menu_main" />
 		<menuitem id="mdc_menu_custmap" name="Customer Mapping"
@@ -450,12 +451,29 @@
 					<group expand="0" string="Group By...">
 						<filter string="Delivery Zone" icon="terp-go-month" domain="[]"
 							context="{'group_by':'delivery_zone'}" />
-							<filter string="Expected Delivery Date" icon="terp-go-month" domain="[]"
-                            context="{'group_by':'date_expected'}" />
+						<filter string="Expected Delivery Date" icon="terp-go-month"
+							domain="[]" context="{'group_by':'date_expected'}" />
 					</group>
 				</search>
 			</field>
 		</record>
+
+		<record id="mdc_view_picking_out_search" model="ir.ui.view">
+			<field name="name">mdc.view.picking.out.search</field>
+			<field name="model">stock.picking.out</field>
+			<field name="inherit_id" ref="stock.view_picking_out_search" />
+			<field name="arch" type="xml">
+				<search string="Picking list">
+					<group expand="0" string="Group By...">
+						<filter string="Delivery Zone" icon="terp-go-month" domain="[]"
+							context="{'group_by':'delivery_zone'}" />
+						<filter string="Expected Delivery Date" icon="terp-go-month"
+							domain="[]" context="{'group_by':'date_expected'}" />
+					</group>
+				</search>
+			</field>
+		</record>
+
 	</data>
 </openerp>
 

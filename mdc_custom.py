@@ -180,6 +180,10 @@ class stock_picking_out(osv.osv):
         'date_expected': fields.date('Expected Delivery Date', required=False, readonly=False),
         'inv_ref' : fields.char('Ref.Invoice No', size=64),
         'client_order_ref': fields.char('Customer Reference', size=64),
+        'delivery_zone': fields.selection([
+        ('bangkok', 'Bangkok'),
+        ('greater_bangkok', 'Greater Bangkok'),
+        ('upcountry', 'Upcountry')],"Delivery Zone")   
     }
 
   
@@ -197,9 +201,11 @@ class stock_picking_out(osv.osv):
                 so_date_expected = so_rec[0].date_expected
                 so_inv_ref = so_rec[0].inv_ref
                 so_client_order_ref = so_rec[0].client_order_ref
+                so_delivery_zone = so_rec[0].delivery_zone
                 self.write(cr, uid, id, {'date_expected' : so_date_expected,
                                      'inv_ref' : so_inv_ref,
-                                     'client_order_ref' : so_client_order_ref 
+                                     'client_order_ref' : so_client_order_ref,
+                                     'delivery_zone' : so_delivery_zone, 
                                      },context=context)
         # WATCH OUT AND TO DO - write soem check if there is already existing values, do not overwrite it
   
