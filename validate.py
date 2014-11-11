@@ -107,11 +107,14 @@ def validate(self, cr, uid, context):
         
         match_count = 0
         for prod_rec in all_prod:
-            if prod_rec[prod_field] == prod_value:
-                # Found the product, assign key_prod to mdcso_prod
-                mdcso_prod = prod_rec[ordermap_rec[0].key_prod]
-                prodmap_ok = True
-                match_count = match_count + 1
+            try:
+                if prod_rec[prod_field] == prod_value:
+                    # Found the product, assign key_prod to mdcso_prod
+                    mdcso_prod = prod_rec[ordermap_rec[0].key_prod]
+                    prodmap_ok = True
+                    match_count = match_count + 1
+            except:
+                pass
         
         if prodmap_ok and match_count == 1:
             vldn_msg = vldn_msg + "\nRaw Product Value: " + prod_value + " matched with " + mdcso_prod
