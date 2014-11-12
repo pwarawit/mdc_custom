@@ -34,12 +34,12 @@ def create_lpout(self, cr, uid, ids, setting_name, context=None):
         
         # Find customer
         cust_id = do_rec['partner_id'][0]
-        ship_to_party = ''
-        ship_to_name = ''
-        street = ''
-        street2 = ''
-        city = ''
-        postalcode = ''
+        ship_to_party = u''
+        ship_to_name = u''
+        street = u''
+        street2 = u''
+        city = u''
+        postalcode = u''
         for cust in all_custs:
             if cust['id'] == cust_id:
                 if setting[0].shiptoparty:
