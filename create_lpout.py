@@ -62,6 +62,12 @@ def create_lpout(self, cr, uid, ids, setting_name, context=None):
         for do_line in do_lines:
             # Compose string for each line
             line_count = line_count + 1
+            
+            if not do_rec[setting[0].deliveryorder]:
+                raise osv.except_osv('Error',    'Customer Reference can not be blank.')
+            if not do_rec[setting[0].deliveryorderdate]:
+                raise osv.except_osv('Error',    'Expected Delivery Date can not be blank.')
+            
             log_msg = log_msg + "\n" + do_rec[setting[0].deliveryorder]
             log_msg = log_msg + "," + str(line_count * setting[0].doitem)
             # Get the prod_id from stock_move record
